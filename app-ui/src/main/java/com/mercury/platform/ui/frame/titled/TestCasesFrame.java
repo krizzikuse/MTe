@@ -107,8 +107,8 @@ public class TestCasesFrame extends AbstractTitledComponentFrame {
         buttonColumn.gridy++;
         JLabel mapBulkLabel = componentsFactory.getTextLabel("Random bulk map message");
         testPanel.add(mapBulkLabel, titleColumn);
-        titleColumn.gridy++;
-
+        titleColumn.gridy++;        
+        
         JButton accessibilityStatusButton = componentsFactory.getBorderedButton("Click");
         accessibilityStatusButton.addActionListener(action -> {
             NotificationDescriptor randomItemIncMessage = this.testEngine.getRandomItemIncMessage();

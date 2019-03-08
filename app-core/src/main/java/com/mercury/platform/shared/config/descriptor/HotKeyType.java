@@ -173,6 +173,18 @@ public enum HotKeyType implements Serializable {
         public String getTooltip() {
             return "Dnd";
         }
+    },
+    T_TOGGLE_NOTIFICATIONS {
+        @Override
+        public String getIconPath() {
+            return "NOTHING SET YET - TODO ?";
+        }
+
+        @Override
+        public String getTooltip() {
+            return "Hides Incoming and Outgoing Notifications";
+        }
+        
     };
 
     public static boolean contains(HotKeyType entry) {

@@ -2,21 +2,35 @@ package com.mercury.platform.ui.components.panel.notification;
 
 import com.mercury.platform.shared.config.descriptor.HotKeyType;
 import com.mercury.platform.shared.entity.message.CurrencyTradeNotificationDescriptor;
+import com.mercury.platform.shared.store.MercuryStoreCore;
 import com.mercury.platform.ui.components.fields.font.FontStyle;
 import com.mercury.platform.ui.components.fields.font.TextAlignment;
 import com.mercury.platform.ui.misc.AppThemeColor;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
+import javax.swing.border.EmptyBorder;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import net.miginfocom.swing.MigLayout;
 
 
 public class CurrencyTradeOutNotificationPanel extends TradeOutNotificationPanel<CurrencyTradeNotificationDescriptor> {
     @Override
     protected JPanel getMessagePanel() {
-        JPanel labelsPanel = this.componentsFactory.getJPanel(new BorderLayout(), AppThemeColor.FRAME);
-
+//        JPanel labelsPanel = this.componentsFactory.getJPanel(new BorderLayout(), AppThemeColor.FRAME);
+        JPanel labelsPanel = this.componentsFactory.getJPanel(
+                new MigLayout("insets 0 0 0 0, gap 0 0, fill", 
+                              "0[grow, fill]unrel push[center]push[]0"), AppThemeColor.FRAME);
+        
+        JPanel currencyPanel = this.getOfferPanel();
+        currencyPanel.addMouseListener(new TooltipMouseListener("Offer"));
+        currencyPanel.setBackground(AppThemeColor.TRANSPARENT);
+        
         JLabel historyLabel = this.getHistoryButton();
         JButton repeatButton = this.getRepeatButton();
         JPanel buttons = this.componentsFactory.getJPanel(new GridLayout(1, 0, 5, 0), AppThemeColor.FRAME);
@@ -31,8 +45,27 @@ public class CurrencyTradeOutNotificationPanel extends TradeOutNotificationPanel
         }
         this.interactButtonMap.put(HotKeyType.N_REPEAT_MESSAGE, repeatButton);
 
-        labelsPanel.add(miscPanel, BorderLayout.CENTER);
-        labelsPanel.add(buttons, BorderLayout.LINE_END);
+        JLabel relation = componentsFactory.getIconLabel("pricecheck/" + "equals_grey_70" + ".png", 26);
+        relation.setHorizontalAlignment(SwingConstants.CENTER);
+        relation.setVerticalAlignment(SwingConstants.CENTER);    
+        relation.setVisible(false);
+        
+//        JPanel listedPanel = new JPanel();
+//        JLabel listedCurrencyLabel = new JLabel();
+//        JLabel listedCountLabel = new JLabel();
+//        this.componentsFactory.makeEmptyCurrencyPanel(listedPanel, listedCurrencyLabel, listedCountLabel);  
+        JPanel listedPanel = this.getOfferPanel();
+        listedPanel.setBackground(AppThemeColor.TRANSPARENT);
+        listedPanel.setVisible(false);
+//        labelsPanel.add(miscPanel, BorderLayout.CENTER);
+//        labelsPanel.add(buttons, BorderLayout.LINE_END);
+        labelsPanel.add(miscPanel,"left, gap 0 0");
+        labelsPanel.add(currencyPanel,"wmin 50, sgx x, gap 0 0, split 3");
+        labelsPanel.add(relation, "wmin 35, center, gap 0 0");
+        labelsPanel.add(listedPanel, "wmin 50, sgx x, left, gapleft 0, gapright push, gapy 0");
+        
+        labelsPanel.add(buttons, "right, grow 0, gap 0 0");
+
         return labelsPanel;
     }
 
@@ -60,8 +93,8 @@ public class CurrencyTradeOutNotificationPanel extends TradeOutNotificationPanel
             itemsPanel.setLayout(new BoxLayout(itemsPanel, BoxLayout.Y_AXIS));
             itemsPanel.add(this.componentsFactory.getTextLabel(this.data.getCurrForSaleCount().intValue() + " " + this.data.getCurrForSaleTitle()));
             fromPanel.add(itemsPanel, BorderLayout.LINE_START);
-        } else {
-            JPanel currencyPanel = this.getCurrencyPanel(this.data.getCurrForSaleCount(), this.data.getCurrForSaleTitle());
+        } else {        
+            JPanel currencyPanel = this.getCurrencyPanel2(this.data.getCurrForSaleCount(), this.data.getCurrForSaleTitle());
             currencyPanel.setBackground(AppThemeColor.FRAME);
             fromPanel.add(currencyPanel, BorderLayout.LINE_START);
             fromPanel.add(getCurrencyRatePanel(), BorderLayout.CENTER);
@@ -85,5 +118,25 @@ public class CurrencyTradeOutNotificationPanel extends TradeOutNotificationPanel
         ratePanel.add(currencyLabel, BorderLayout.CENTER);
         return ratePanel;
     }
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    @AllArgsConstructor
+    private class TooltipMouseListener extends MouseAdapter {
+        private String tooltip;
 
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            MercuryStoreCore.tooltipSubject.onNext(tooltip);
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            MercuryStoreCore.tooltipSubject.onNext(null);
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            MercuryStoreCore.tooltipSubject.onNext(null);
+        }
+    }   
 }

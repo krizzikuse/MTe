@@ -2,13 +2,13 @@ package com.mercury.platform.shared.store;
 
 import com.sun.jna.platform.DesktopWindow;
 import com.sun.jna.platform.WindowUtils;
-import org.junit.Before;
 import org.junit.Test;
 import rx.observers.TestSubscriber;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import org.junit.Before;
 
 
 public class MercuryStoreCoreTest {
@@ -16,8 +16,7 @@ public class MercuryStoreCoreTest {
     @Before
     public void windowsOnly() {
         org.junit.Assume.assumeTrue(IS_WINDOWS);
-    }
-
+    }    
     @Test
     public void testSoundReducer() throws IOException {
         TestSubscriber<Map<String,String>> testSubscriber = new TestSubscriber<>();

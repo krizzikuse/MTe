@@ -1,0 +1,4 @@
+/target/
+/app-shared/target/
+/app-ui/target/
+*.class

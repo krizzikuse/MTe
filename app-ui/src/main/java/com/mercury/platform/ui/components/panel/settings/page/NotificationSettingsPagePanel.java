@@ -25,11 +25,13 @@ public class NotificationSettingsPagePanel extends SettingsPagePanel {
     private List<HotKeyPair> incHotKeySnapshot;
     private List<HotKeyPair> outHotKeySnapshot;
     private List<HotKeyPair> scannerHotKeySnapshot;
+    private List<HotKeyPair> notificationHotKeySnapshot;
 
     private HotKeyGroup incHotkeyGroup;
     private HotKeyGroup outHotkeyGroup;
     private HotKeyGroup whHotkeyGroup;
     private HotKeyGroup scannerHotkeyGroup;
+    private HotKeyGroup notificationHotkeyGroup;    
 
     @Override
     public void onViewInit() {
@@ -40,11 +42,14 @@ public class NotificationSettingsPagePanel extends SettingsPagePanel {
         this.incHotKeySnapshot = CloneHelper.cloneObject(hotKeyService.get().getIncNHotKeysList());
         this.outHotKeySnapshot = CloneHelper.cloneObject(hotKeyService.get().getOutNHotKeysList());
         this.scannerHotKeySnapshot = CloneHelper.cloneObject(hotKeyService.get().getScannerNHotKeysList());
+        this.notificationHotKeySnapshot = CloneHelper.cloneObject(hotKeyService.get().getNotificationNHotKeysList());
+        
 
         this.incHotkeyGroup = new HotKeyGroup();
         this.outHotkeyGroup = new HotKeyGroup();
         this.whHotkeyGroup = new HotKeyGroup();
         this.scannerHotkeyGroup = new HotKeyGroup();
+        this.notificationHotkeyGroup = new HotKeyGroup();
 
         JPanel whisperHelperPanel = this.adrComponentsFactory.getCounterPanel(this.getWhisperHelperPanel(), "Whisper helper:", AppThemeColor.ADR_BG, false);
         whisperHelperPanel.setBorder(BorderFactory.createLineBorder(AppThemeColor.ADR_PANEL_BORDER));
@@ -67,6 +72,7 @@ public class NotificationSettingsPagePanel extends SettingsPagePanel {
         this.hotKeyService.get().setIncNHotKeysList(CloneHelper.cloneObject(this.incHotKeySnapshot));
         this.hotKeyService.get().setOutNHotKeysList(CloneHelper.cloneObject(this.outHotKeySnapshot));
         this.hotKeyService.get().setScannerNHotKeysList(CloneHelper.cloneObject(this.scannerHotKeySnapshot));
+        this.hotKeyService.get().setNotificationNHotKeysList(CloneHelper.cloneObject(this.notificationHotKeySnapshot));
     }
 
     @Override
@@ -75,6 +81,7 @@ public class NotificationSettingsPagePanel extends SettingsPagePanel {
         this.incHotKeySnapshot = CloneHelper.cloneObject(hotKeyService.get().getIncNHotKeysList());
         this.outHotKeySnapshot = CloneHelper.cloneObject(hotKeyService.get().getOutNHotKeysList());
         this.scannerHotKeySnapshot = CloneHelper.cloneObject(hotKeyService.get().getScannerNHotKeysList());
+        this.notificationHotKeySnapshot = CloneHelper.cloneObject(hotKeyService.get().getNotificationNHotKeysList());
         this.removeAll();
         this.onViewInit();
     }
@@ -120,6 +127,35 @@ public class NotificationSettingsPagePanel extends SettingsPagePanel {
             }
         });
         propertiesPanel.add(nickNameField);
+        
+        propertiesPanel.add(this.componentsFactory.getTextLabel("Your accountname(for price verification):", FontStyle.REGULAR, 16));
+        JTextField accountNameField = this.componentsFactory.getTextField(this.generalSnapshot.getAccountName(), FontStyle.DEFAULT, 15f);
+        accountNameField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                generalSnapshot.setAccountName(accountNameField.getText());
+            }
+        });        
+        propertiesPanel.add(accountNameField);
+        
+        //!!!!!TODO!!!!! add Field for Hotkey for setting notifications invisible here!
+        propertiesPanel.add(this.componentsFactory.getTextLabel("Hotkey for turning Notification invisible:", FontStyle.REGULAR, 16));
+        HotKeyPanel hotKeyPanel = new HotKeyPanel(this.notificationHotKeySnapshot.get(0).getDescriptor()); //.getNotificationsInvisibleHotKey());
+        this.notificationHotkeyGroup.registerHotkey(hotKeyPanel);
+        propertiesPanel.add(hotKeyPanel);
+        
+        
+//        if (this.selectedProfile.getHotkeysSettingsDescriptor()
+//                .getOutNHotKeysList().stream()
+//                .filter(it -> HotKeyType.N_WHO_IS.equals(it.getType()))
+//                .findAny().orElse(null) == null) {
+//            this.selectedProfile.getHotkeysSettingsDescriptor()
+//                    .getOutNHotKeysList().add(new HotKeyPair(HotKeyType.N_WHO_IS, new HotKeyDescriptor()));
+//        }        
+        
+        
+        
+        
         root.add(this.componentsFactory.wrapToSlide(propertiesPanel, AppThemeColor.ADR_BG, 2, 0, 2, 2), BorderLayout.PAGE_START);
         return root;
     }
@@ -192,6 +228,17 @@ public class NotificationSettingsPagePanel extends SettingsPagePanel {
         JPanel root = this.componentsFactory.getJPanel(new GridLayout(0, 2, 4, 4), AppThemeColor.SETTINGS_BG);
         root.setBorder(BorderFactory.createLineBorder(AppThemeColor.ADR_DEFAULT_BORDER));
         this.incHotKeySnapshot.forEach(pair -> {
+            root.add(this.componentsFactory.getIconLabel(pair.getType().getIconPath(), 18, SwingConstants.CENTER, pair.getType().getTooltip()));
+            HotKeyPanel hotKeyPanel = new HotKeyPanel(pair.getDescriptor());
+            this.incHotkeyGroup.registerHotkey(hotKeyPanel);
+            root.add(this.componentsFactory.wrapToSlide(hotKeyPanel, AppThemeColor.SETTINGS_BG, 2, 4, 1, 1));
+        });
+        return root;
+    }
+    private JPanel getNotificationHotKeysPanel() {
+        JPanel root = this.componentsFactory.getJPanel(new GridLayout(0, 2, 4, 4), AppThemeColor.SETTINGS_BG);
+        root.setBorder(BorderFactory.createLineBorder(AppThemeColor.ADR_DEFAULT_BORDER));
+        this.notificationHotKeySnapshot.forEach(pair -> {
             root.add(this.componentsFactory.getIconLabel(pair.getType().getIconPath(), 18, SwingConstants.CENTER, pair.getType().getTooltip()));
             HotKeyPanel hotKeyPanel = new HotKeyPanel(pair.getDescriptor());
             this.incHotkeyGroup.registerHotkey(hotKeyPanel);

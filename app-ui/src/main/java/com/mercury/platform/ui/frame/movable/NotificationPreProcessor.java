@@ -67,7 +67,7 @@ public class NotificationPreProcessor implements AsSubscriber {
                 CurrencyTradeNotificationDescriptor descriptor = (CurrencyTradeNotificationDescriptor) notificationDescriptor;
                 if (descriptor.getCurrForSaleTitle() != null) {
                     return descriptor.getCurrForSaleTitle();
-                }
+                }                    
             }
         }
         return UUID.randomUUID().toString();

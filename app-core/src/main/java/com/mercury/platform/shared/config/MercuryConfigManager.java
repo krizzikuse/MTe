@@ -8,20 +8,35 @@ import com.mercury.platform.shared.config.configration.impl.adr.AdrConfiguration
 import com.mercury.platform.shared.config.descriptor.*;
 import com.mercury.platform.shared.config.json.JSONHelper;
 import com.mercury.platform.shared.store.MercuryStoreCore;
+import currencydata.CurrencyData;
+import currencydata.ExchangeHelper;
+import static helpful_techniques.FileHelper.getPath;
+//import currencydata.POETradeCurrencyDataEntry;
+//import currencydata.POETradeCurrencyData;
+import java.io.BufferedReader;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
+import poedotcom.PoEdotcomQueryHandler;
+import poedotcom.basictypes.Enums.QueryType;
+import poedotcom.itemdata.ItemExpert;
+import poeninja.PoENinjaCommunicator;
 
 
 public class MercuryConfigManager implements ConfigManager, AsSubscriber {
     private Logger logger = LogManager.getLogger(MercuryConfigManager.class.getSimpleName());
-
     private ConfigurationSource dataSource;
     private JSONHelper jsonHelper;
     private List<ProfileDescriptor> profileDescriptors;
@@ -39,10 +54,28 @@ public class MercuryConfigManager implements ConfigManager, AsSubscriber {
     private AdrConfigurationService adrConfigurationService;
 
     private List<BaseConfigurationService> services = new ArrayList<>();
-
+    
+    private CurrencyData currencyData;
+    
+    
+    JSONHelper poetradeCurrJSONHelper;
+    JSONHelper poedotcomCurrJSONHelper;
+    String basePath = "";
     public MercuryConfigManager(ConfigurationSource dataSource) {
         this.dataSource = dataSource;
         this.jsonHelper = new JSONHelper(dataSource.getConfigurationFilePath());
+        //this.poetradeCurrJSONHelper = new JSONHelper("C:\\Mercury Trade Enahncements\\MercuryTrade-master\\Enhancements_config\\json\\poeTradeCurrencyData.json");
+        
+//        basePath = new File("..").getAbsolutePath();
+//        System.out.println(basePath);        
+        
+//        basePath = getPath();
+//        this.poetradeCurrJSONHelper = new JSONHelper(basePath + "/Enhancements_config/json/poeTradeCurrencyData.json");
+//        this.poedotcomCurrJSONHelper = new JSONHelper(basePath + "/Enhancements_config/json/poeDotComCurrencyData.json");
+
+        this.poetradeCurrJSONHelper = new JSONHelper(getPath("Enhancements_config/json/poeTradeCurrencyData.json"));
+        this.poedotcomCurrJSONHelper = new JSONHelper(getPath("Enhancements_config/json/poeDotComCurrencyData.json"));
+        
         this.subscribe();
     }
 
@@ -90,6 +123,11 @@ public class MercuryConfigManager implements ConfigManager, AsSubscriber {
     public ListConfigurationService<StashTabDescriptor> stashTabConfiguration() {
         return this.stashTabConfigurationService;
     }
+    
+    @Override
+    public CurrencyData currencyData() {
+        return this.currencyData;
+    }
 
     @Override
     public IconBundleConfigurationService iconBundleConfiguration() {
@@ -124,6 +162,54 @@ public class MercuryConfigManager implements ConfigManager, AsSubscriber {
             }
             this.profileDescriptors = this.jsonHelper.readArrayData(new TypeToken<List<ProfileDescriptor>>() {
             });
+            
+            /*
+                https://stackoverflow.com/questions/33997562/how-parse-variable-name-json-objects-using-gson          
+            */            
+            //get location of jar/class on Harddisk: (following 2 lines) (!!!PATH!!!)
+            // String path = MercuryConfigManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+            // String decodedPath = URLDecoder.decode(path, "UTF-8");
+
+            //POETradeCurrencyData a;
+            //a = currJSONHelper.readMapData("",new TypeToken<POETradeCurrencyData>() { });
+            //List<POETradeCurrencyDataEntry> al = this.currJSONHelper.readArrayDataVar(new TypeToken<List<POETradeCurrencyDataEntry>>() { });  //WORKS kinda
+            //List<POETradeCurrencyDataEntry> al = this.currJSONHelper.readArrayDataVar(new TypeToken<List<POETradeCurrencyDataEntry>>() { });  //TESTING FUCKING AROUND
+            CurrencyData currencyData = this.poetradeCurrJSONHelper.readPOETradeCurrency();  //TESTING FUCKING AROUND
+            
+            currencyData.addPOEdotcomCurrency(this.poedotcomCurrJSONHelper.readPOEDotComCurrencyData());
+            //this.poedotcomCurrJSONHelper.readPOEDotComCurrencyData();
+            //poedotcomCurrJSONHelper
+            
+            //this.currJSONHelper.readArrayDataVar2();  //TESTING FUCKING AROUND
+            List<String> currencyNames = new LinkedList();
+            //currencyNames= Arrays.asList();
+            try (BufferedReader br = new BufferedReader(
+                //new FileReader("C:\\Mercury Trade Enahncements\\MercuryTrade-master\\Enhancements_config\\txt\\CurrencyNames.txt"))) {
+                new FileReader(getPath("Enhancements_config/txt/CurrencyNames.txt")))) {
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                       currencyNames.add(line.trim());// process the line.
+                    }
+
+                }       
+
+            currencyData.addCurrencyList(currencyNames);
+            //List<String> currencynames = 
+            
+            //JSONtests jsontest = new JSONtests();
+            //TODO: remove from here once its implemented in the right place!
+            PoEdotcomQueryHandler poecomqueryhandler = new PoEdotcomQueryHandler();
+//            poecomqueryhandler.getOffers("Betrayal",QueryType.currency,"aserelite","Orb of Alchemy"); 
+            ItemExpert itemExpert = new ItemExpert();
+            itemExpert.decipherData(poecomqueryhandler.getItemData());
+            
+            PoENinjaCommunicator poeninjacommhandler = new PoENinjaCommunicator();
+            
+            ExchangeHelper.addExchangeRates(poeninjacommhandler.getCurrencyExchangeRates());
+//            ExchangeHelper exch = new ExchangeHelper(
+//                    poeninjacommhandler.getCurrencyExchangeRates());
+            
+            
             if (this.profileDescriptors == null) {
                 this.profileDescriptors = new ArrayList<>();
                 ProfileDescriptor defaultProfile = this.getDefaultProfile();

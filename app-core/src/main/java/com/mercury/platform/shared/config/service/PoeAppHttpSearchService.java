@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-
+// @Chris: !!!TODO!!!: try using this class to see what works/doesnt work!!!
 public class PoeAppHttpSearchService extends HttpItemSearchService {
     public static void main(String[] args) {
         PoeAppHttpSearchService searchService = new PoeAppHttpSearchService();

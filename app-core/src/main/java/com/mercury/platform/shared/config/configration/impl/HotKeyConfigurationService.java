@@ -42,9 +42,13 @@ public class HotKeyConfigurationService extends BaseConfigurationService<HotKeys
         scannerNDataList.add(new HotKeyPair(HotKeyType.N_OPEN_CHAT, new HotKeyDescriptor()));
         scannerNDataList.add(new HotKeyPair(HotKeyType.N_CLOSE_NOTIFICATION, new HotKeyDescriptor()));
 
+        List<HotKeyPair> notificationNDataList = new ArrayList<>();
+        notificationNDataList.add(new HotKeyPair(HotKeyType.T_TOGGLE_NOTIFICATIONS, new HotKeyDescriptor()));
+        
         hotKeysSettingsDescriptor.setIncNHotKeysList(incNDataList);
         hotKeysSettingsDescriptor.setOutNHotKeysList(outNDataList);
         hotKeysSettingsDescriptor.setScannerNHotKeysList(scannerNDataList);
+        hotKeysSettingsDescriptor.setNotificationNHotKeysList(notificationNDataList);
         return hotKeysSettingsDescriptor;
     }
 
@@ -71,6 +75,10 @@ public class HotKeyConfigurationService extends BaseConfigurationService<HotKeys
                 .setScannerNHotKeysList(this.removeNullTypesFrom(
                         this.selectedProfile.getHotkeysSettingsDescriptor().getScannerNHotKeysList()));
 
+        this.selectedProfile.getHotkeysSettingsDescriptor()
+                .setNotificationNHotKeysList(this.removeNullTypesFrom(
+                        this.selectedProfile.getHotkeysSettingsDescriptor().getNotificationNHotKeysList()));
+
         if (this.selectedProfile.getHotkeysSettingsDescriptor()
                 .getOutNHotKeysList().stream()
                 .filter(it -> HotKeyType.N_WHO_IS.equals(it.getType()))
@@ -85,6 +93,13 @@ public class HotKeyConfigurationService extends BaseConfigurationService<HotKeys
                 .findAny().orElse(null) == null) {
             this.selectedProfile.getHotkeysSettingsDescriptor()
                     .getScannerNHotKeysList().add(new HotKeyPair(HotKeyType.N_WHO_IS, new HotKeyDescriptor()));
+        }
+        if (this.selectedProfile.getHotkeysSettingsDescriptor()
+                .getNotificationNHotKeysList().stream()
+                .filter(it -> HotKeyType.T_TOGGLE_NOTIFICATIONS.equals(it.getType()))
+                .findAny().orElse(null) == null) {
+            this.selectedProfile.getHotkeysSettingsDescriptor()
+                    .getNotificationNHotKeysList().add(new HotKeyPair(HotKeyType.T_TOGGLE_NOTIFICATIONS, new HotKeyDescriptor()));
         }
     }
 

@@ -10,4 +10,5 @@ public class ItemTradeNotificationDescriptor extends TradeNotificationDescriptor
     private String tabName;
     private int left;
     private int top;
+    
 }

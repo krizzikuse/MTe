@@ -38,8 +38,8 @@ public class MercuryTaskBarController implements TaskBarController {
     @Override
     public void showHelpIG() {
         FramesManager.INSTANCE.hideOrShowFrame(HelpIGFrame.class);
-    }
-
+    }    
+    
     @Override
     public void showChatFiler() {
         FramesManager.INSTANCE.hideOrShowFrame(ChatScannerFrame.class);

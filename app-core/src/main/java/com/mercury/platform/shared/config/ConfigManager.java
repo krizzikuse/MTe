@@ -2,6 +2,7 @@ package com.mercury.platform.shared.config;
 
 import com.mercury.platform.shared.config.configration.*;
 import com.mercury.platform.shared.config.descriptor.*;
+import currencydata.CurrencyData;
 
 import java.util.List;
 
@@ -30,4 +31,6 @@ public interface ConfigManager {
     IconBundleConfigurationService iconBundleConfiguration();
 
     List<ProfileDescriptor> profiles();
+    
+    CurrencyData currencyData();
 }

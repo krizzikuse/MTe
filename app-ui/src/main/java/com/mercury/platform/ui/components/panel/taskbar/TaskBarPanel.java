@@ -90,7 +90,7 @@ public class TaskBarPanel extends JPanel implements ViewInit {
         this.toHideout.addActionListener(action -> {
             this.controller.performHideout();
         });
-
+        
         this.showHelpIG = componentsFactory.getIconButton(
                 "app/helpIG_icon.png",
                 24,
@@ -98,8 +98,8 @@ public class TaskBarPanel extends JPanel implements ViewInit {
                 TooltipConstants.HELPIG);
         this.showHelpIG.addActionListener(action -> {
             this.controller.showHelpIG();
-        });
-
+        });        
+        
         JButton adr = componentsFactory.getIconButton(
                 "app/overseer_icon.png",
                 24,
@@ -197,7 +197,7 @@ public class TaskBarPanel extends JPanel implements ViewInit {
         this.add(Box.createRigidArea(new Dimension(3, 4)));
         this.add(visibleMode);
         this.add(Box.createRigidArea(new Dimension(2, 4)));
-        this.add(this.showHelpIG);
+        this.add(this.showHelpIG);        
         this.add(Box.createRigidArea(new Dimension(2, 4)));
         this.add(historyButton);
         this.add(Box.createRigidArea(new Dimension(3, 4)));

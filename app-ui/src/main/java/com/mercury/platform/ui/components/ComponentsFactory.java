@@ -7,6 +7,8 @@ import com.mercury.platform.ui.components.fields.font.TextAlignment;
 import com.mercury.platform.ui.components.fields.style.MercuryComboBoxUI;
 import com.mercury.platform.ui.components.fields.style.MercuryScrollBarUI;
 import com.mercury.platform.ui.components.panel.misc.ToggleCallback;
+import com.mercury.platform.ui.components.panel.notification.MultiLineButton;
+import com.mercury.platform.ui.components.panel.notification.MultiLineLabel;
 import com.mercury.platform.ui.misc.AppThemeColor;
 import com.mercury.platform.ui.misc.MercuryStoreUI;
 import lombok.AllArgsConstructor;
@@ -32,6 +34,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.text.NumberFormat;
+import java.util.Objects;
 
 /**
  * Factory for each element which uses in application
@@ -92,6 +95,9 @@ public class ComponentsFactory {
                 }
             }
         };
+        //button.setHorizontalTextPosition(SwingConstants.LEFT);
+        //button.setVerticalTextPosition(SwingConstants.BOTTOM);
+        
         button.setBackground(background);
         button.setForeground(AppThemeColor.TEXT_DEFAULT);
         button.setFocusPainted(false);
@@ -129,6 +135,67 @@ public class ComponentsFactory {
                 button.setBackground(button.getBackground());
             }
         });
+        return button;
+    }
+    /**
+     * Get button with custom params
+     *
+     * @param fontStyle  path of exile font type
+     * @param background button background
+     * @param border     button border
+     * @param text       default text
+     * @param fontSize   font size
+     * @return JButton object
+     */
+    public MultiLineButton getMButton(FontStyle fontStyle, Color background, Border border, String text, float fontSize) {
+        MultiLineButton button = new MultiLineButton(text);// {
+//            @Override
+//            protected void paintBorder(Graphics g) {
+//                if (!this.getModel().isPressed()) {
+//                    super.paintBorder(g);
+//                }
+//            }
+//        };
+        JButton test = new JButton("test");
+        
+        button.setBackground(background);
+        button.setForeground(AppThemeColor.TEXT_DEFAULT);
+        //button.setFocusPainted(false);
+        button.addMouseListener(new MouseAdapter() {
+            Border prevBorder;
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                this.prevBorder = button.getBorder();
+                CompoundBorder compoundBorder = BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(AppThemeColor.ADR_SELECTED_BORDER, 1),
+                        BorderFactory.createLineBorder(button.getBackground(), 3)
+                );
+                button.setBorder(compoundBorder);
+                button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBorder(prevBorder);
+                button.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            }
+        });
+        button.addActionListener(action -> {
+            MercuryStoreCore.soundSubject.onNext(SoundType.CLICKS);
+        });
+        if (isAscii(text)) {
+            button.setFont(getSelectedFont(fontStyle).deriveFont(scale * fontSize));
+        } else {
+            button.setFont(DEFAULT_FONT.deriveFont(scale * fontSize));
+        }
+        button.setBorder(border);
+        //button.addc
+//        button.addActionListener(e -> {
+//            if (!button.getModel().isPressed()) {
+//                button.setBackground(button.getBackground());
+//            }
+//        });
         return button;
     }
 
@@ -173,6 +240,13 @@ public class ComponentsFactory {
         CompoundBorder compoundBorder = BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(outerBorderColor, 1),
                 BorderFactory.createLineBorder(innerBorderColor, 3)
+        );
+        return getButton(FontStyle.BOLD, background, compoundBorder, text, scale * fontSize);
+    }
+    public JButton getBorderedNotificationButton(String text, float fontSize, Color background, Color outerBorderColor, Color innerBorderColor) {
+        CompoundBorder compoundBorder = BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(outerBorderColor, 1),
+                BorderFactory.createLineBorder(innerBorderColor, 1)
         );
         return getButton(FontStyle.BOLD, background, compoundBorder, text, scale * fontSize);
     }
@@ -339,12 +413,219 @@ public class ComponentsFactory {
         }
         return label;
     }
+    
+    //protected JPanel getCurrencyPanel2(Double curCount, String curIconPath) {
+    public void makeCurrencyPanel(
+            JPanel curPanel, JLabel currencyLabel, JLabel countLabel,
+            Double curCount, String curIconPath) {
+        String curCountStr = " ";
+        if (curCount > 0) {
+            curCountStr = curCount % 1 == 0 ?
+                    String.valueOf(curCount.intValue()) :
+                    String.valueOf(curCount);
+        }
+        if (!Objects.equals(curCountStr, "") && curIconPath != null) {
+            //JLabel currencyLabel = componentsFactory.getIconLabel("currency/" + curIconPath + ".png", 26);
+            makeIconLabel(currencyLabel,"currency/" + curIconPath + ".png", 26);
+            
+//            JPanel curPanel = this.componentsFactory.getJPanel(new GridLayout(1, 0, 0, 0), AppThemeColor.MSG_HEADER);
+            curPanel.setLayout(new GridLayout(1, 0, 0, 0)); 
+            curPanel.setBackground(AppThemeColor.TRANSPARENT);
+            
+            curPanel.setAlignmentX(SwingConstants.LEFT);
+            
+//            JLabel countLabel = this.componentsFactory.getTextLabel(curCountStr, FontStyle.BOLD, 16f);
+            makeTextLabel(countLabel,curCountStr, FontStyle.BOLD, 16f);
+
+            countLabel.setHorizontalAlignment(SwingConstants.LEFT);
+            curPanel.add(countLabel);
+            curPanel.add(currencyLabel);
+        }
+    }
+        
+//    protected JPanel getCurrencyPanel2(Double curCount, String curIconPath) {
+    public void makeEmptyCurrencyPanel(JPanel curPanel, JLabel currencyLabel, JLabel countLabel) {
+        String curCountStr = " ";
+        Double curCount = new Double(0);
+        String curIconPath = "alt";
+
+        if (curCount > 0) {
+            curCountStr = curCount % 1 == 0 ?
+                    String.valueOf(curCount.intValue()) :
+                    String.valueOf(curCount);
+        }
+        
+        if (!Objects.equals(curCountStr, "") && curIconPath != null) {
+            makeIconLabel(currencyLabel,"currency/" + curIconPath + ".png", 26);
+            
+            //JPanel curPanel = this.componentsFactory.getJPanel(new GridLayout(1, 0, 0, 0), AppThemeColor.MSG_HEADER);
+            curPanel.setLayout(new GridLayout(1, 0, 0, 0)); 
+            //curPanel.setBackground(AppThemeColor.MSG_HEADER);
+            
+            curPanel.setAlignmentX(SwingConstants.LEFT);
+            
+            //JLabel countLabel = this.componentsFactory.getTextLabel(curCountStr, FontStyle.BOLD, 16f);
+            makeTextLabel(countLabel,curCountStr, FontStyle.BOLD, 16f);
+            
+            countLabel.setHorizontalAlignment(SwingConstants.LEFT);
+            curPanel.add(countLabel);
+            curPanel.add(currencyLabel);
+            curPanel.setBackground(AppThemeColor.TRANSPARENT);
+//            return curPanel;
+        }
+        //curPanel.setVisible(false);
+//        return null;
+    }
+    //TODO do we need that?
+    public void makeEmptyMultiCurrencyPanel(JPanel curPanel, JLabel currencyLabel, JLabel countLabel) {
+        String curCountStr = " ";
+        Double curCount = new Double(0);
+        String curIconPath = "alt";
+
+        if (curCount > 0) {
+            curCountStr = curCount % 1 == 0 ?
+                    String.valueOf(curCount.intValue()) :
+                    String.valueOf(curCount);
+        }
+        
+        if (!Objects.equals(curCountStr, "") && curIconPath != null) {
+            makeIconLabel(currencyLabel,"currency/" + curIconPath + ".png", 26);
+            
+            //JPanel curPanel = this.componentsFactory.getJPanel(new GridLayout(1, 0, 0, 0), AppThemeColor.MSG_HEADER);
+            curPanel.setLayout(new GridLayout(1, 0, 0, 0)); 
+            //curPanel.setBackground(AppThemeColor.MSG_HEADER);
+            
+            curPanel.setAlignmentX(SwingConstants.LEFT);
+            
+            //JLabel countLabel = this.componentsFactory.getTextLabel(curCountStr, FontStyle.BOLD, 16f);
+            makeTextLabel(countLabel,curCountStr, FontStyle.BOLD, 16f);
+            
+            countLabel.setHorizontalAlignment(SwingConstants.LEFT);
+            curPanel.add(countLabel);
+            curPanel.add(currencyLabel);
+            curPanel.setBackground(AppThemeColor.TRANSPARENT);
+//            return curPanel;
+        }
+        //curPanel.setVisible(false);
+//        return null;
+    }
+    
+    public void makeIconLabel(JLabel iconLabel,String iconPath, int size) {
+        //JLabel iconLabel = new JLabel();
+        try {
+            iconLabel.setIcon(getIcon(iconPath, (int) (scale * size)));
+        } catch (Exception e) {
+//            return getTextLabel(StringUtils.substringBetween(iconPath, "/", "."));
+        }
+//        return iconLabel;
+    }
+    
+//        public void makeEmptyCurrencyPanel(JPanel curPanel, JLabel currencyLabel, JLabel countLabel) {
+//        String curCountStr = " ";
+//        Double curCount = new Double(0);
+//        String curIconPath = "alt";
+//        
+////        if (curCount > 0) {
+////            curCountStr = curCount % 1 == 0 ?
+////                    String.valueOf(curCount.intValue()) :
+////                    String.valueOf(curCount);
+////        }
+////        if (!Objects.equals(curCountStr, "") && curIconPath != null) {
+//            //currencyLabel = componentsFactory.getIconLabel("currency/" + curIconPath + ".png", 26);
+//        currencyLabel.setIcon(getIcon("currency/" + curIconPath + ".png", (int) (getScale() * 26)));
+//
+////            curPanel = this.componentsFactory.getJPanel(new GridLayout(1, 0, 0, 0), AppThemeColor.MSG_HEADER);
+//        curPanel.setLayout(new GridLayout(1, 0, 0, 0)); 
+//        curPanel.setBackground(AppThemeColor.MSG_HEADER);
+//
+//        curPanel.setAlignmentX(SwingConstants.LEFT);
+//        countLabel = getTextLabel(curCountStr, FontStyle.BOLD, 16f);
+//        countLabel.setText(curCountStr);
+//        if (isAscii(curCountStr)) {
+//            curCountStr.setFont(getSelectedFont(fontStyle).deriveFont(scale * size));
+//        } else {
+//            countLabel.setFont(DEFAULT_FONT.deriveFont(scale * size));
+//        }
+//    }
+//    public JLabel getTextLabel(String text, FontStyle style, float size) {
+//        return getTextLabel(style, AppThemeColor.TEXT_DEFAULT, TextAlignment.LEFTOP, size, text);
+//    }
+    public void makeTextLabel(JLabel label, String text, FontStyle style, float size) {
+        makeTextLabel(label, style, AppThemeColor.TEXT_DEFAULT, TextAlignment.LEFTOP, size, text);
+    }
+    //public JLabel getTextLabel(FontStyle fontStyle, Color frColor, TextAlignment alignment, float size, String text) {
+    public void makeTextLabel(JLabel label,FontStyle fontStyle, Color frColor, TextAlignment alignment, float size, String text) {
+        //JLabel label = new JLabel(text);
+        label.setText(text);
+        if (isAscii(text)) {
+            label.setFont(getSelectedFont(fontStyle).deriveFont(scale * size));
+        } else {
+            label.setFont(DEFAULT_FONT.deriveFont(scale * size));
+        }
+        label.setForeground(frColor);
+        Border border = label.getBorder();
+        label.setBorder(new CompoundBorder(border, new EmptyBorder(0, 5, 0, 5)));
+
+        if (alignment != null) {
+            switch (alignment) {
+                case LEFTOP: {
+                    label.setAlignmentX(Component.LEFT_ALIGNMENT);
+                    label.setAlignmentY(Component.TOP_ALIGNMENT);
+                }
+                break;
+                case RIGHTOP: {
+                    label.setAlignmentX(Component.RIGHT_ALIGNMENT);
+                    label.setAlignmentY(Component.TOP_ALIGNMENT);
+                }
+                case CENTER: {
+                    label.setAlignmentX(Component.CENTER_ALIGNMENT);
+                    label.setAlignmentY(Component.TOP_ALIGNMENT);
+                }
+                break;
+            }
+        }
+//        return label;
+    }        
+        
+        
+    public MultiLineLabel getMLabel(FontStyle fontStyle, Color frColor, TextAlignment alignment, float size, String text) {
+        MultiLineLabel label = new MultiLineLabel(text);
+        if (isAscii(text)) {
+            label.setFont(getSelectedFont(fontStyle).deriveFont(scale * size));
+        } else {
+            label.setFont(DEFAULT_FONT.deriveFont(scale * size));
+        }
+        label.setForeground(frColor);
+        Border border = label.getBorder();
+        label.setBorder(new CompoundBorder(border, new EmptyBorder(0, 5, 0, 5)));
+
+        if (alignment != null) {
+            switch (alignment) {
+                case LEFTOP: {
+                    label.setAlignmentX(Component.LEFT_ALIGNMENT);
+                    label.setAlignmentY(Component.TOP_ALIGNMENT);
+                }
+                break;
+                case RIGHTOP: {
+                    label.setAlignmentX(Component.RIGHT_ALIGNMENT);
+                    label.setAlignmentY(Component.TOP_ALIGNMENT);
+                }
+                case CENTER: {
+                    label.setAlignmentX(Component.CENTER_ALIGNMENT);
+                    label.setAlignmentY(Component.TOP_ALIGNMENT);
+                }
+                break;
+            }
+        }
+        return label;
+    }
 
     public JLabel getTextLabel(FontStyle fontStyle, Color frColor, TextAlignment alignment, float size, Border border, String text) {
         JLabel textLabel = getTextLabel(fontStyle, frColor, alignment, size, text);
         textLabel.setBorder(border);
         return textLabel;
     }
+    
 
     /**
      * Get default label
@@ -371,6 +652,9 @@ public class ComponentsFactory {
     public JLabel getTextLabel(String text, FontStyle style, Color color, float size) {
         return getTextLabel(style, color, TextAlignment.LEFTOP, size, text);
     }
+    public MultiLineLabel getTextMLabel(String text, FontStyle style, Color color, float size) {
+        return getMLabel(style, color, TextAlignment.LEFTOP, size, text);
+    }
 
     /**
      * Get label with icon
@@ -379,6 +663,7 @@ public class ComponentsFactory {
      * @param size     icon size
      * @return JLabel object with icon
      */
+    //TODO: correct this so the right currency name comes in here (in order to find the RIGHT icon!)
     public JLabel getIconLabel(String iconPath, int size) {
         JLabel iconLabel = new JLabel();
         try {

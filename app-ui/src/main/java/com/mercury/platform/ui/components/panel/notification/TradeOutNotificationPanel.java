@@ -14,6 +14,7 @@ import rx.Subscription;
 
 import javax.swing.*;
 import java.awt.*;
+import net.miginfocom.swing.MigLayout;
 
 
 public abstract class TradeOutNotificationPanel<T extends TradeNotificationDescriptor> extends TradeNotificationPanel<T, OutgoingPanelController> {
@@ -21,20 +22,33 @@ public abstract class TradeOutNotificationPanel<T extends TradeNotificationDescr
 
     @Override
     protected JPanel getHeader() {
-        JPanel root = new JPanel(new BorderLayout());
+        JPanel root = new JPanel(new MigLayout("insets 0 0 0 0, gap 0 0",
+        "0[sizegroup,grow]unrel[center]unrel[sizegroup,grow]0",
+        "0[]0[]0[]0")); 
         root.setBackground(AppThemeColor.MSG_HEADER);
 
-        JPanel nickNamePanel = this.componentsFactory.getJPanel(new BorderLayout(), AppThemeColor.MSG_HEADER);
+//        JPanel nickNamePanel = this.componentsFactory.getJPanel(new BorderLayout(), AppThemeColor.MSG_HEADER);
         this.nicknameLabel = this.componentsFactory.getTextLabel(FontStyle.BOLD, AppThemeColor.TEXT_NICKNAME, TextAlignment.LEFTOP, 15f, this.data.getWhisperNickname());
-        nickNamePanel.add(this.getExpandButton(), BorderLayout.LINE_START);
-        JPanel headerPanel = this.componentsFactory.getJPanel(new GridLayout(1, 0, 3, 0), AppThemeColor.MSG_HEADER);
-        headerPanel.add(this.nicknameLabel);
-        headerPanel.add(this.getForPanel("app/outgoing_arrow.png"));
-        nickNamePanel.add(headerPanel, BorderLayout.CENTER);
-        root.add(nickNamePanel, BorderLayout.CENTER);
+//        nickNamePanel.add(this.getExpandButton(), BorderLayout.LINE_START);
+//        JPanel headerPanel = this.componentsFactory.getJPanel(new GridLayout(1, 0, 3, 0), AppThemeColor.MSG_HEADER);
+//        headerPanel.add(this.nicknameLabel);
+//        headerPanel.add(this.getForPanel("app/outgoing_arrow.png"));
+//        JPanel currencyPanel = this.getCurrencyPanel(this.data.getCurCount(), this.data.getCurrency());        
+//        headerPanel.add(currencyPanel);
+        root.add(this.getExpandButton(),"sgy h, left, grow 0, gapy 0, gapx 0, split 2");
+        root.add(this.nicknameLabel,"gapy 0, gapx 0, wmin 0");
+        root.add(this.getTradeDirectionArrow("app/outgoing_arrow.png"), "sgy, wmin 16, split 2, gapright unrel");
+        JPanel interactionPanel = new JPanel(
+                new MigLayout("insets 0 0 0 0, fill, gap 0 0",
+                            "0[]0",
+                            "0[grow,fill]0"));        
 
-        JPanel opPanel = this.componentsFactory.getJPanel(new BorderLayout(), AppThemeColor.MSG_HEADER);
-        JPanel interactionPanel = new JPanel(new GridLayout(1, 0, 3, 0));
+
+//        nickNamePanel.add(headerPanel, BorderLayout.CENTER);
+//        root.add(nickNamePanel, BorderLayout.CENTER);
+
+//        JPanel opPanel = this.componentsFactory.getJPanel(new BorderLayout(), AppThemeColor.MSG_HEADER);
+//        JPanel interactionPanel = new JPanel(new GridLayout(1, 0, 3, 0));
         interactionPanel.setBackground(AppThemeColor.MSG_HEADER);
         JButton visiteHideout = componentsFactory.getIconButton("app/visiteHideout.png", 16, AppThemeColor.MSG_HEADER, TooltipConstants.VISIT_HO);
         visiteHideout.addActionListener(e -> this.controller.visitHideout());
@@ -55,12 +69,14 @@ public abstract class TradeOutNotificationPanel<T extends TradeNotificationDescr
         hideButton.addActionListener(action -> {
             this.controller.performHide();
         });
-        interactionPanel.add(visiteHideout);
-        interactionPanel.add(tradeButton);
-        interactionPanel.add(leaveButton);
-        interactionPanel.add(whoIsButton);
-        interactionPanel.add(openChatButton);
-        interactionPanel.add(hideButton);
+        
+        interactionPanel.add(visiteHideout,"split 6, gapx 0");
+        interactionPanel.add(tradeButton,"gapx 0");
+        interactionPanel.add(leaveButton,"gapx 0");
+        interactionPanel.add(whoIsButton,"gapx 0");
+        interactionPanel.add(openChatButton,"gapx 0");
+        interactionPanel.add(hideButton,"gapx 0");
+        
         this.interactButtonMap.clear();
         this.interactButtonMap.put(HotKeyType.N_VISITE_HIDEOUT, visiteHideout);
         this.interactButtonMap.put(HotKeyType.N_TRADE_PLAYER, tradeButton);
@@ -70,10 +86,11 @@ public abstract class TradeOutNotificationPanel<T extends TradeNotificationDescr
         this.interactButtonMap.put(HotKeyType.N_CLOSE_NOTIFICATION, hideButton);
 
         JPanel timePanel = this.getTimePanel();
-        opPanel.add(timePanel, BorderLayout.CENTER);
-        opPanel.add(interactionPanel, BorderLayout.LINE_END);
-
-        root.add(opPanel, BorderLayout.LINE_END);
+//        opPanel.add(timePanel, BorderLayout.CENTER);
+//        opPanel.add(interactionPanel, BorderLayout.LINE_END);
+        root.add(timePanel,"sgy, wmin 35, gapright push");
+        root.add(interactionPanel,"sgy h,right, gap 0 0");
+//        root.add(opPanel, BorderLayout.LINE_END);
         return root;
     }
 

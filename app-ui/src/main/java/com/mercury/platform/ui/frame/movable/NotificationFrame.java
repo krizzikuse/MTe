@@ -5,6 +5,9 @@ import com.mercury.platform.core.misc.SoundType;
 import com.mercury.platform.shared.FrameVisibleState;
 import com.mercury.platform.shared.config.Configuration;
 import com.mercury.platform.shared.config.configration.PlainConfigurationService;
+import com.mercury.platform.shared.config.descriptor.HotKeyDescriptor;
+import com.mercury.platform.shared.config.descriptor.HotKeyPair;
+import static com.mercury.platform.shared.config.descriptor.HotKeyType.T_TOGGLE_NOTIFICATIONS;
 import com.mercury.platform.shared.config.descriptor.NotificationSettingsDescriptor;
 import com.mercury.platform.shared.entity.message.FlowDirections;
 import com.mercury.platform.shared.entity.message.NotificationDescriptor;
@@ -13,6 +16,8 @@ import com.mercury.platform.shared.store.MercuryStoreCore;
 import com.mercury.platform.ui.components.ComponentsFactory;
 import com.mercury.platform.ui.components.fields.font.FontStyle;
 import com.mercury.platform.ui.components.fields.font.TextAlignment;
+import com.mercury.platform.ui.components.panel.notification.ItemTradeIncNotificationPanel;
+import com.mercury.platform.ui.components.panel.notification.ItemTradeOutNotificationPanel;
 import com.mercury.platform.ui.components.panel.notification.NotificationPanel;
 import com.mercury.platform.ui.components.panel.notification.controller.stub.IncStubController;
 import com.mercury.platform.ui.components.panel.notification.controller.stub.OutStubController;
@@ -26,10 +31,13 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import poedotcom.OfferVsListingData;
+import rx.Subscription;
 
 
 public class NotificationFrame extends AbstractMovableComponentFrame {
     private static int BUFFER_DEFAULT_HEIGHT = 1500;
+    //private static int BUFFER_DEFAULT_HEIGHT = 0;
     private List<NotificationPanel> notificationPanels;
     private PlainConfigurationService<NotificationSettingsDescriptor> config;
     private NotificationPanelFactory providersFactory;
@@ -44,6 +52,10 @@ public class NotificationFrame extends AbstractMovableComponentFrame {
 
     private JPanel buffer;
 
+    HotKeyPair toggleNotificationhotKeyPair;
+    
+    private Subscription settingsPostSubscription;    
+    
     @Override
     protected void initialize() {
         super.initialize();
@@ -55,6 +67,7 @@ public class NotificationFrame extends AbstractMovableComponentFrame {
         this.stubComponentsFactory.setScale(this.scaleConfig.get("notification"));
         this.providersFactory = new NotificationPanelFactory();
         this.preProcessor = new NotificationPreProcessor();
+       
     }
 
     @Override
@@ -84,6 +97,21 @@ public class NotificationFrame extends AbstractMovableComponentFrame {
     @Override
     @SuppressWarnings("all")
     public void subscribe() {
+        //System.out.println("HotkeysConfig="+Configuration.get().hotKeysConfiguration().get());
+        toggleNotificationhotKeyPair = Configuration.get().hotKeysConfiguration().get()
+                    .getNotificationNHotKeysList()
+                    .stream()
+                    .filter(it -> it.getType().equals(T_TOGGLE_NOTIFICATIONS))
+                    .findAny().orElse(null);      
+
+//    @Override
+//    public void subscribe() {
+        
+        this.settingsPostSubscription = MercuryStoreUI.settingsPostSubject.subscribe(state -> {
+            this.updateHotKeyPool();
+        });
+//    }
+        
         MercuryStoreCore.dndSubject.subscribe(state -> {
             this.dnd = state;
             if (!this.dnd && this.notificationPanels.size() > 0) {
@@ -92,6 +120,10 @@ public class NotificationFrame extends AbstractMovableComponentFrame {
                 this.setVisible(false);
             }
         });
+        MercuryStoreCore.notificationsVisibleSubject.subscribe(state -> {
+            toggleVisible(state);
+        });
+        
         MercuryStoreCore.expiredNotificationSubject.subscribe(notification -> {
             List<NotificationPanel> stubList = new ArrayList<>(this.notificationPanels);
             String descriptorData = this.preProcessor.getDescriptorData(notification);
@@ -112,6 +144,12 @@ public class NotificationFrame extends AbstractMovableComponentFrame {
                 }
                 if (this.preProcessor.isAllowed(notification)) {
                     MercuryStoreCore.soundSubject.onNext(SoundType.MESSAGE);
+                    
+//                    if (notificationPanel instanceof ItemTradeIncNotificationPanel) {
+//                        OfferVsListingData t = null;
+//                        ((ItemTradeIncNotificationPanel)notificationPanel).setPriceVerificationResult(t);
+//                    }                              
+
                     this.addNotification(notificationPanel);
                 }
             });
@@ -122,7 +160,19 @@ public class NotificationFrame extends AbstractMovableComponentFrame {
                         .setData(message)
                         .setComponentsFactory(this.componentsFactory)
                         .build();
+                
+                
+//                if (notificationPanel instanceof ItemTradeIncNotificationPanel) {
+//                    OfferVsListingData t = null;
+//                    ((ItemTradeIncNotificationPanel)notificationPanel).setPriceVerificationResult(t);
+//                }                
+                
+                
+                
                 this.addNotification(notificationPanel);
+                this.setVisible(false);
+                this.setVisible(true);
+                
             });
         });
         MercuryStoreCore.removeNotificationSubject.subscribe(notification -> {
@@ -148,6 +198,8 @@ public class NotificationFrame extends AbstractMovableComponentFrame {
                 if (this.notificationPanels.size() > 0 && ProdStarter.APP_STATUS.equals(FrameVisibleState.SHOW)) {
                     this.notificationPanels.get(0).onHotKeyPressed(hotkeyDescriptor);
                 }
+                onHotKeyPressed(hotkeyDescriptor);
+                //if (hotkeyDescriptor.equals(Configuration.get().hotKeysConfiguration().get().getNotificationHotKeysList().get().getType()))
             });
         });
         MercuryStoreUI.settingsPostSubject.subscribe(state -> {
@@ -178,23 +230,25 @@ public class NotificationFrame extends AbstractMovableComponentFrame {
     }
 
     private void addNotification(NotificationPanel notificationPanel) {
+//        if (notificationPanel instanceof ItemTradeOutNotificationPanel)
+//            return;
         this.notificationPanels.add(notificationPanel);
         if (this.flowDirections.equals(FlowDirections.UPWARDS)) {
             this.container.add(
                     this.componentsFactory.wrapToSlide(
                             notificationPanel, AppThemeColor.TRANSPARENT, 1, 1, 1, 1), 0);
-        } else {
+        } else {    //da ist das Problem, irgendwo
             this.container.add(this.componentsFactory.wrapToSlide(notificationPanel, AppThemeColor.TRANSPARENT, 1, 1, 1, 1));
+            //this.container.add(this.componentsFactory.wrapToSlide(notificationPanel, AppThemeColor.TRANSPARENT, 1, 1, 1, 1),BorderLayout.LINE_START);
+            //this.container.add(this.componentsFactory.wrapToSlide(notificationPanel.getParent(), AppThemeColor.TRANSPARENT, 1, 1, 1, 1));
         }
         int delta = -notificationPanel.getParent().getPreferredSize().height;
-
-
         if (this.notificationPanels.size() > this.config.get().getLimitCount()) {
             if (!this.expanded) {
                 notificationPanel.getParent().setVisible(false);
                 delta = 0;
             }
-            this.root.remove(this.stubExpandPanel);
+            //this.root.remove(this.stubExpandPanel);
             this.root.add(this.expandPanel, BorderLayout.LINE_START);
         }
         if (this.flowDirections.equals(FlowDirections.UPWARDS) &&
@@ -206,10 +260,39 @@ public class NotificationFrame extends AbstractMovableComponentFrame {
         if (this.flowDirections.equals(FlowDirections.UPWARDS) &&
                 (notificationPanel.getAdditionalHeightDelta() > 0) && this.notificationPanels.size() == 1) {
             this.pack();
-            this.changeBufferSize(-notificationPanel.getAdditionalHeightDelta());
+            this.changeBufferSize(-notificationPanel.getAdditionalHeightDelta());            
         }
+        
+//            NotificationFrame frame = (NotificationFrame) SwingUtilities.getWindowAncestor(NotificationPanel.this);
+//            if (this.contentPanel.isVisible()) {
+//                this.contentPanel.setVisible(false);
+//                expandButton.setIcon(this.componentsFactory.getIcon("app/default-mp.png", 18f));
+//                frame.changeBufferSize(this.contentPanel.getPreferredSize().height);        
+//        this.invalidate();
+//        this.validate();
+
+//        this.changeBufferSize(this.getPreferredSize().height);
+//
+//        this.pack();
+//        
+//        this.changeBufferSize(this.getPreferredSize().height);
+//        //this.validate();
+//        //this.
+//        this.repaint();
+//        
+//        this.changeBufferSize(this.getPreferredSize().height);
+        
         this.pack();
         this.repaint();
+        
+//        if (notificationPanel instanceof ItemTradeIncNotificationPanel) {
+//            OfferVsListingData t = null;
+//            ((ItemTradeIncNotificationPanel)notificationPanel).setPriceVerificationResult(t);
+//        }
+        //System.out.println("notificationPanel.getPreferredSize()=" +this.componentsFactory.wrapToSlide(notificationPanel, AppThemeColor.TRANSPARENT, 1, 1, 1, 1).getPreferredSize());
+        //validateContainer();
+//        this.changeBufferSize(delta);
+//        this.repaint();
     }
 
     private void removeNotification(NotificationPanel notificationPanel) {
@@ -275,12 +358,14 @@ public class NotificationFrame extends AbstractMovableComponentFrame {
         panel.add(textLabel, BorderLayout.CENTER);
 
         JPanel limitPanel = this.componentsFactory.getJPanel(new BorderLayout(), AppThemeColor.FRAME);
-        limitPanel.setPreferredSize(this.expandPanel.getPreferredSize());
+        limitPanel.setPreferredSize(this.expandPanel.getPreferredSize());   //what? doch das expandPanel?!
+        //System.out.println("this.expandPanel.getPreferredSize()=" + this.expandPanel.getPreferredSize());
         JLabel expandIconLabel = componentsFactory.getIconLabel("app/expand_button_pin.png", 24, SwingConstants.CENTER);
         limitPanel.add(expandIconLabel, BorderLayout.CENTER);
         root.add(panel, BorderLayout.CENTER);
         root.add(limitPanel, BorderLayout.LINE_START);
-        root.setPreferredSize(new Dimension((int) (400 * componentsFactory.getScale()), (int) (92 * componentsFactory.getScale())));
+        root.setPreferredSize(new Dimension((int) (400 * componentsFactory.getScale()), (int) (130 * componentsFactory.getScale())));
+        //System.out.println("root.getPreferredSize="+ root.getPreferredSize());
         return root;
     }
 
@@ -375,4 +460,29 @@ public class NotificationFrame extends AbstractMovableComponentFrame {
         root.add(expandButton, BorderLayout.CENTER);
         return this.componentsFactory.wrapToSlide(root, AppThemeColor.TRANSPARENT, 1, 1, 1, 1);
     }
+    
+    //public boolean visibleNotifications = true;
+    public void toggleVisible(boolean b) {
+        //visibleNotifications = visibleNotifications == true ? false : true;
+        //new Frame().setVisible(visibleNotifications);
+        this.setVisible(b);
+    }
+    
+    private void onHotKeyPressed(HotKeyDescriptor descriptor) {
+//        JButton button = this.hotKeysPool.get(descriptor);
+        if (descriptor.equals(toggleNotificationhotKeyPair.getDescriptor())) {
+            if (this.isVisible())
+                this.setVisible(false);
+            else
+                this.setVisible(true);
+        }      
+    }   
+    
+    private void updateHotKeyPool() {
+        toggleNotificationhotKeyPair = Configuration.get().hotKeysConfiguration().get()
+                    .getNotificationNHotKeysList()
+                    .stream()
+                    .filter(it -> it.getType().equals(T_TOGGLE_NOTIFICATIONS))
+                    .findAny().orElse(null);         
+    } 
 }

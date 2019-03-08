@@ -4,6 +4,8 @@ import com.mercury.platform.shared.entity.message.CurrencyTradeNotificationDescr
 import com.mercury.platform.shared.entity.message.ItemTradeNotificationDescriptor;
 import com.mercury.platform.shared.entity.message.NotificationDescriptor;
 import com.mercury.platform.shared.entity.message.NotificationType;
+import currencydata.CurrencyAmount;
+import currencydata.CurrencyData;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
@@ -17,16 +19,19 @@ public class MessageParser {
     private final static String poeAppPattern = "^(.*\\s)?(.+): (\\s*?wtb\\s+?(.+?)(\\s+?listed for\\s+?([\\d\\.]+?)\\s+?(.+))?\\s+?in\\s+?(.+?)\\s+?\\(stash\\s+?\"(.*?)\";\\s+?left\\s+?(\\d+?),\\s+?top\\s+(\\d+?)\\)\\s*?(.*))$";
     private final static String poeAppBulkCurrenciesPattern = "^(.*\\s)?(.+): (\\s*?wtb\\s+?(.+?)(\\s+?listed for\\s+?([\\d\\.]+?)\\s+?(.+))?\\s+?in\\s+?(.+?)\\s+?\\(stash\\s+?\"(.*?)\";\\s+?left\\s+?(\\d+?),\\s+?top\\s+(\\d+?)\\)\\s*?(.*))$";
     private final static String poeCurrencyPattern = "^(.*\\s)?(.+): (.+ to buy your (\\d+(\\.\\d+)?)? (.+) for my (\\d+(\\.\\d+)?)? (.+) in (.*?)\\.\\s*(.*))$";
+    private final static String poeCurrencyMultiPattern = "(\\d+(\\.\\d+)?)? (.+)";
     private Pattern poeAppItemPattern;
     private Pattern poeTradeStashItemPattern;
     private Pattern poeTradeItemPattern;
     private Pattern poeTradeCurrencyPattern;
+    private Pattern poeTradeMultiCurrencyPattern;
 
     public MessageParser() {
         this.poeAppItemPattern = Pattern.compile(poeAppPattern);
         this.poeTradeStashItemPattern = Pattern.compile(poeTradeStashTabPattern);
         this.poeTradeItemPattern = Pattern.compile(poeTradePattern);
         this.poeTradeCurrencyPattern = Pattern.compile(poeCurrencyPattern);
+        this.poeTradeMultiCurrencyPattern = Pattern.compile(poeCurrencyMultiPattern);
     }
 
     public NotificationDescriptor parse(String fullMessage) {
@@ -77,7 +82,6 @@ public class MessageParser {
         Matcher poeTradeCurrencyMatcher = poeTradeCurrencyPattern.matcher(fullMessage);
         if (poeTradeCurrencyMatcher.find()) {
             CurrencyTradeNotificationDescriptor tradeNotification = new CurrencyTradeNotificationDescriptor();
-
             if (poeTradeCurrencyMatcher.group(6).contains("&") || poeTradeCurrencyMatcher.group(6).contains(",")) {  //todo this shit for bulk map
                 String bulkItems = poeTradeCurrencyMatcher.group(4) + " " + poeTradeCurrencyMatcher.group(6);
                 tradeNotification.setItems(Arrays.stream(StringUtils.split(bulkItems, ",&")).map(String::trim).collect(Collectors.toList()));
@@ -85,11 +89,29 @@ public class MessageParser {
                 tradeNotification.setCurrForSaleCount(Double.parseDouble(poeTradeCurrencyMatcher.group(4)));
                 tradeNotification.setCurrForSaleTitle(poeTradeCurrencyMatcher.group(6));
             }
-
+            
             tradeNotification.setWhisperNickname(poeTradeCurrencyMatcher.group(2));
-            tradeNotification.setSourceString(poeTradeCurrencyMatcher.group(3));
+            tradeNotification.setSourceString(poeTradeCurrencyMatcher.group(3));            
             tradeNotification.setCurCount(Double.parseDouble(poeTradeCurrencyMatcher.group(7)));
             tradeNotification.setCurrency(poeTradeCurrencyMatcher.group(9));
+            if (tradeNotification.getCurrency().matches(".*&.*")) {
+                String[] currs = tradeNotification.getCurrency().split("&");
+                tradeNotification.getCurrencies().add(
+                        new CurrencyAmount(CurrencyData.getProperCurrencyName(currs[0]),tradeNotification.getCurCount()));
+                
+                for (String curr : Arrays.copyOfRange(currs,1,currs.length)) { //Arrays.copyOfRange(stringArray, 1, stringArray.length);
+                    //System.out.println("curr="+curr);
+                    Matcher mcm = poeTradeMultiCurrencyPattern.matcher(curr.trim());
+                    if (mcm.find())
+                        if (mcm.group(1) == null)
+                            tradeNotification.getCurrencies().add(
+                                    new CurrencyAmount(CurrencyData.getProperCurrencyName(mcm.group(3)),1));
+                        else
+                            tradeNotification.getCurrencies().add(
+                                    new CurrencyAmount(CurrencyData.getProperCurrencyName(mcm.group(3)),Double.parseDouble(mcm.group(1))));
+                }
+            }            
+            
             tradeNotification.setLeague(poeTradeCurrencyMatcher.group(10));
             tradeNotification.setOffer(poeTradeCurrencyMatcher.group(11));
             tradeNotification.setType(NotificationType.INC_CURRENCY_MESSAGE);

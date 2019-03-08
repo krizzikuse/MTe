@@ -12,12 +12,14 @@ public class MercuryNativeKeyListener implements NativeKeyListener {
 
     private boolean block;
 
+    private boolean notificationsVisible = true;
     public MercuryNativeKeyListener() {
         MercuryStoreCore.blockHotkeySubject.subscribe(state -> this.block = state);
     }
-
+    
     @Override
     public void nativeKeyPressed(NativeKeyEvent nativeKeyEvent) {
+        System.out.println("nativeKeyEvent.getKeyCode() = " + nativeKeyEvent.getKeyCode());
         switch (nativeKeyEvent.getKeyCode()) {
             case 42: {
                 shiftPressed = true;
@@ -31,6 +33,12 @@ public class MercuryNativeKeyListener implements NativeKeyListener {
                 menuPressed = true;
                 break;
             }
+            case 66:
+                // TODO make it configurable
+                //F8 pressed - make notifications invisible
+                notificationsVisible = notificationsVisible ? false : true;
+                MercuryStoreCore.notificationsVisibleSubject.onNext(notificationsVisible);
+                break;
             default: {
                 if (!this.block) {
                     MercuryStoreCore.hotKeySubject.onNext(this.getDescriptor(nativeKeyEvent));

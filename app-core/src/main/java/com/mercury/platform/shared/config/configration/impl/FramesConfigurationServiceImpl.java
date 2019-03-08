@@ -64,8 +64,8 @@ public class FramesConfigurationServiceImpl extends BaseConfigurationService<Map
 
     private void initMinimumMap() {
         minimumFrameSize.put("TaskBarFrame", new Dimension(109, 20));
-        minimumFrameSize.put("NotificationFrame", new Dimension(320, 10));
-        minimumFrameSize.put("OutMessageFrame", new Dimension(280, 115));
+        minimumFrameSize.put("NotificationFrame", new Dimension(320, 200));
+        minimumFrameSize.put("OutMessageFrame", new Dimension(280, 200));
         minimumFrameSize.put("TestCasesFrame", new Dimension(400, 100));
         minimumFrameSize.put("SettingsFrame", new Dimension(600, 400));
         minimumFrameSize.put("HistoryFrame", new Dimension(280, 400));

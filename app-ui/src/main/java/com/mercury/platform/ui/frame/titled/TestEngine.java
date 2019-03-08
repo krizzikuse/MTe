@@ -25,6 +25,7 @@ public class TestEngine {
     private String currencyTemplate = "%s: Hi, I'd like to buy your %d %s for my %d %s in %s. %s";
     private String currencyMapBulkTemplate = "%s: Hi, I'd like to buy your %s for my %d %s in %s. %s";
 
+    
     public TestEngine() {
         this.messageBuilder.setChunkStrings(Arrays.asList("Hi", "buy", "listed", "like"));
 
@@ -259,7 +260,6 @@ public class TestEngine {
         list.add(descriptor5);
         return list;
     }
-
     public NotificationDescriptor getRandomMapBulkMessage() {
         NotificationDescriptor notificationDescriptor = parser.parse(String.format(currencyMapBulkTemplate,
                 nickNames.get(random.nextInt(nickNames.size())),
@@ -272,5 +272,4 @@ public class TestEngine {
         notificationDescriptor.setRelatedMessages(this.getChatHistory());
         return notificationDescriptor;
     }
-
 }

@@ -49,10 +49,10 @@ public abstract class NotificationPanel<T, C> extends JPanel implements AsSubscr
     @Setter
     private float paintAlphaValue = 1f;
     private Subscription settingsPostSubscription;
-
+    
     @Setter
     @Getter
-    private int additionalHeightDelta = 0;
+    private int additionalHeightDelta = 0;    
 
     @Override
     public void onViewInit() {
@@ -104,6 +104,8 @@ public abstract class NotificationPanel<T, C> extends JPanel implements AsSubscr
                 this.paintAlphaValue = 1.0f;
             }
             this.repaint();
+            //this.responseButtonsPanel;
+            //System.out.println("this.getComponentCount()=" +this.getComponentCount());
         }
     }
 
