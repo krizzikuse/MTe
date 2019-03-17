@@ -55,10 +55,12 @@ import poedotcom.queryrequest.query.stats.StatsFiltersField;
 //"C:\Mercury Trade Enahncements\MercuryTrade-master\app-core\src\main\java\poedotcom\queryrequest\query\StatusField.java"
 import poedotcom.queryrequest.query.StatusField.StatusValues;
 import static java.lang.System.exit;
+import java.util.HashMap;
 import java.util.Map;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import poedotcom.basictypes.Enums.QueryType;
+import poedotcom.basictypes.PoEdotcomIDText;
 import poedotcom.queryrequest.BulkQueryRequest;
 import poedotcom.queryrequest.query.filters.trade.PriceRangeField;
 import poedotcom.queryrequest.query.filters.trade.StashInfoField;
@@ -594,6 +596,54 @@ public class PoEdotcomQueryHandler {
                         + "pathofexile.com.API.Trade.Data.Items.json"); 
         
         return result;
+    }
+    
+    public PoEdotcomLeagueData getLeagueData() throws IOException {
+        //www.pathofexile.com/api/trade/data/leagues
+        JsonObject result = getPoEdotcomData("/api/trade/data/leagues",true,
+                        "Enhancements_config/json/"
+                        + "pathofexile.com.API.Trade.Data.Items.json"); 
+        Type mapType = new TypeToken<PoEdotcomLeagueData>() {}.getType();
+        JsonParser jsonParser = new JsonParser();
+        PoEdotcomLeagueData leagues = gson.fromJson(result, mapType);        
+                
+        
+        return leagues;
+    }
+    
+    public Map<String,String> getCurrencyMapData() throws IOException {
+        //https://www.pathofexile.com/api/trade/data/static
+        JsonObject result = getPoEdotcomData("/api/trade/data/static",true,
+                        "Enhancements_config/json/"
+                        + "pathofexile.com.API.Trade.Data.Static.json"); 
+        
+        gson = new Gson();
+//        Type mapType = new TypeToken<PoEdotcomCurrencyData>() {}.getType();
+//        JsonParser jsonParser = new JsonParser();
+//        //JsonReader reader = new JsonReader(new StringReader(jsonStr));
+//        PoEdotcomLeagueData currenciesmaps = gson.fromJson(result, mapType);
+
+//        boolean debug = true;
+//        if (debug) {
+            //Type mapType = new TypeToken<Map<String,Map<String,ArrayList<Object>>>>() {}.getType();
+            Type mapType = new TypeToken<Map<String,Map<String,ArrayList<PoEdotcomIDText>>>>() {}.getType();
+            JsonParser jsonParser = new JsonParser();
+            Map<String,Map<String,ArrayList<PoEdotcomIDText>>> currenciesmaps = gson.fromJson(result, mapType);
+//            for(Map.Entry<String,Map<String,ArrayList<Object>>> tlE : currenciesmaps.entrySet()) 
+//                System.out.println(tlE.getValue());
+//        }
+//        
+        
+        Map<String,String> currenciesmapsMap = new HashMap<String,String>();
+//        for(Map.Entry<String,PoEdotcomCurrency> currencymap : currenciesmaps.getResult().getCurrency().entrySet())
+//            currenciesmapsMap.put(currencymap.getValue().getId(), currencymap.getValue().getText());
+        for(Map.Entry<String,Map<String,ArrayList<PoEdotcomIDText>>> tlE : currenciesmaps.entrySet()) 
+            //System.out.println(tlE.getValue());       
+            for(Map.Entry<String,ArrayList<PoEdotcomIDText>> currencies : tlE.getValue().entrySet())
+                for (PoEdotcomIDText currency : currencies.getValue())
+                    currenciesmapsMap.put(currency.getId(), currency.getText());
+        
+        return currenciesmapsMap;
     }
     
     // https://www.pathofexile.com/api/trade/data/items -> we can get item-types and most uniques from there!

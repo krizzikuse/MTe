@@ -39,6 +39,7 @@ public class CurrencyData {
  	iconNameExceptions.put("exalted orb", "exalted");   // exalted
  	iconNameExceptions.put("harbinger's orb", "Harbinger's Orb");   // Harbinger's Orb	
  	iconNameExceptions.put("jeweller's orb", "jeweller's");	// jeweller's
+ 	iconNameExceptions.put("jewellers", "jeweller's");	// jeweller's
 	
  	iconNameExceptions.put("regal orb", "regal");       // regal
  	iconNameExceptions.put("vaal orb", "vaal");         // vaal
@@ -224,7 +225,10 @@ public class CurrencyData {
         return(currterm);
     }    
     public static String getPoEdotcomBulkExchangeName(String currterm) {
-        return(biPoEDotComData.inverse().get(getProperCurrencyName(currterm).toLowerCase()));
+        if (biPoEDotComData.inverse().containsKey(getProperCurrencyName(currterm).toLowerCase()))
+            return(biPoEDotComData.inverse().get(getProperCurrencyName(currterm).toLowerCase()));
+        else
+            return(biPoEDotComData.inverse().get(getProperCurrencyName(currterm).toLowerCase() + " map"));
     }
 }
 

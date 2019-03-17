@@ -27,6 +27,7 @@ public class NotificationSettingsDescriptor implements Serializable {
     private String playerNickname = "Set up your nickname in settings";
     private String accountName = "Set up your accountname in settings";
     private String notificationsInvisibleText = "Hotkey for setting Notifications invisible";
+    private String league = "Synthesis";
     private HotKeyDescriptor notificationsInvisibleHotKey = new HotKeyDescriptor("F11", KeyEvent.VK_F11, false, false, false);    
     private List<String> autoCloseTriggers = new ArrayList<>();
 }

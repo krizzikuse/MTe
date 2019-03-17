@@ -234,6 +234,46 @@
 			}
 		},
 		{
+			"name":"Circle of Anguish",
+			"type":"Ruby Ring",
+			"text":"Circle of Anguish Ruby Ring",
+			"flags":{
+				"unique":true
+			}
+		},
+		{
+			"name":"Circle of Fear",
+			"type":"Sapphire Ring",
+			"text":"Circle of Fear Sapphire Ring",
+			"flags":{
+				"unique":true
+			}
+		},
+		{
+			"name":"Circle of Guilt",
+			"type":"Iron Ring",
+			"text":"Circle of Guilt Iron Ring",
+			"flags":{
+				"unique":true
+			}
+		},
+		{
+			"name":"Circle of Nostalgia",
+			"type":"Amethyst Ring",
+			"text":"Circle of Nostalgia Amethyst Ring",
+			"flags":{
+				"unique":true
+			}
+		},
+		{
+			"name":"Circle of Regret",
+			"type":"Topaz Ring",
+			"text":"Circle of Regret Topaz Ring",
+			"flags":{
+				"unique":true
+			}
+		},
+		{
 			"name":"Coward's Chains",
 			"type":"Chain Belt",
 			"text":"Coward's Chains Chain Belt",
@@ -461,6 +501,14 @@
 			"name":"Hyperboreus",
 			"type":"Leather Belt",
 			"text":"Hyperboreus Leather Belt",
+			"flags":{
+				"unique":true
+			}
+		},
+		{
+			"name":"Hyrri's Truth",
+			"type":"Jade Amulet",
+			"text":"Hyrri's Truth Jade Amulet",
 			"flags":{
 				"unique":true
 			}
@@ -2529,6 +2577,14 @@
 			}
 		},
 		{
+			"name":"Garb of the Ephemeral",
+			"type":"Savant's Robe",
+			"text":"Garb of the Ephemeral Savant's Robe",
+			"flags":{
+				"unique":true
+			}
+		},
+		{
 			"name":"Garukhan's Flight",
 			"type":"Stealth Boots",
 			"text":"Garukhan's Flight Stealth Boots",
@@ -3049,9 +3105,25 @@
 			}
 		},
 		{
+			"name":"Maloney's Mechanism",
+			"type":"Ornate Quiver",
+			"text":"Maloney's Mechanism Ornate Quiver",
+			"flags":{
+				"unique":true
+			}
+		},
+		{
 			"name":"Maloney's Nightfall",
 			"type":"Blunt Arrow Quiver",
 			"text":"Maloney's Nightfall Blunt Arrow Quiver",
+			"flags":{
+				"unique":true
+			}
+		},
+		{
+			"name":"March of the Legion",
+			"type":"Legion Boots",
+			"text":"March of the Legion Legion Boots",
 			"flags":{
 				"unique":true
 			}
@@ -3084,6 +3156,14 @@
 			"name":"Mask of the Stitched Demon",
 			"type":"Magistrate Crown",
 			"text":"Mask of the Stitched Demon Magistrate Crown",
+			"flags":{
+				"unique":true
+			}
+		},
+		{
+			"name":"Mask of the Tribunal",
+			"type":"Magistrate Crown",
+			"text":"Mask of the Tribunal Magistrate Crown",
 			"flags":{
 				"unique":true
 			}
@@ -3169,6 +3249,14 @@
 			}
 		},
 		{
+			"name":"Offering to the Serpent",
+			"type":"Legion Gloves",
+			"text":"Offering to the Serpent Legion Gloves",
+			"flags":{
+				"unique":true
+			}
+		},
+		{
 			"name":"Omeyocan",
 			"type":"Carnal Boots",
 			"text":"Omeyocan Carnal Boots",
@@ -3196,6 +3284,14 @@
 			"name":"Oskarm",
 			"type":"Nubuck Gloves",
 			"text":"Oskarm Nubuck Gloves",
+			"flags":{
+				"unique":true
+			}
+		},
+		{
+			"name":"Perepiteia",
+			"type":"Ezomyte Spiked Shield",
+			"text":"Perepiteia Ezomyte Spiked Shield",
 			"flags":{
 				"unique":true
 			}
@@ -3601,6 +3697,14 @@
 			}
 		},
 		{
+			"name":"Storm's Gift",
+			"type":"Assassin's Mitts",
+			"text":"Storm's Gift Assassin's Mitts",
+			"flags":{
+				"unique":true
+			}
+		},
+		{
 			"name":"Sundance",
 			"type":"Clasped Boots",
 			"text":"Sundance Clasped Boots",
@@ -3740,6 +3844,14 @@
 			"name":"The Eternal Apple",
 			"type":"Chiming Spirit Shield",
 			"text":"The Eternal Apple Chiming Spirit Shield",
+			"flags":{
+				"unique":true
+			}
+		},
+		{
+			"name":"The Eternity Shroud",
+			"type":"Blood Raiment",
+			"text":"The Eternity Shroud Blood Raiment",
 			"flags":{
 				"unique":true
 			}
@@ -4068,6 +4180,14 @@
 			"name":"Vis Mortis",
 			"type":"Necromancer Silks",
 			"text":"Vis Mortis Necromancer Silks",
+			"flags":{
+				"unique":true
+			}
+		},
+		{
+			"name":"Vixen's Entrapment",
+			"type":"Embroidered Gloves",
+			"text":"Vixen's Entrapment Embroidered Gloves",
 			"flags":{
 				"unique":true
 			}
@@ -5753,6 +5873,10 @@
 			"text":"Spike-Point Arrow Quiver"
 		},
 		{
+			"type":"Ornate Quiver",
+			"text":"Ornate Quiver"
+		},
+		{
 			"type":"Rugged Quiver",
 			"text":"Rugged Quiver"
 		},
@@ -5796,12 +5920,20 @@
 			"text":"A Dab of Ink"
 		},
 		{
+			"type":"Alone in the Darkness",
+			"text":"Alone in the Darkness"
+		},
+		{
 			"type":"A Mother's Parting Gift",
 			"text":"A Mother's Parting Gift"
 		},
 		{
 			"type":"Anarchy's Price",
 			"text":"Anarchy's Price"
+		},
+		{
+			"type":"Arrogance of the Vaal",
+			"text":"Arrogance of the Vaal"
 		},
 		{
 			"type":"Assassin's Favour",
@@ -5832,6 +5964,10 @@
 			"text":"Blind Venture"
 		},
 		{
+			"type":"Boon of Justice",
+			"text":"Boon of Justice"
+		},
+		{
 			"type":"Boon of the First Ones",
 			"text":"Boon of the First Ones"
 		},
@@ -5858,6 +5994,10 @@
 		{
 			"type":"Coveted Possession",
 			"text":"Coveted Possession"
+		},
+		{
+			"type":"Dark Temptation",
+			"text":"Dark Temptation"
 		},
 		{
 			"type":"Death",
@@ -6012,6 +6152,10 @@
 			"text":"Mitts"
 		},
 		{
+			"type":"Monochrome",
+			"text":"Monochrome"
+		},
+		{
 			"type":"No Traces",
 			"text":"No Traces"
 		},
@@ -6044,8 +6188,16 @@
 			"text":"Rebirth"
 		},
 		{
+			"type":"Sambodhi's Vow",
+			"text":"Sambodhi's Vow"
+		},
+		{
 			"type":"Scholar of the Seas",
 			"text":"Scholar of the Seas"
+		},
+		{
+			"type":"Seven Years Bad Luck",
+			"text":"Seven Years Bad Luck"
 		},
 		{
 			"type":"Shard of Fate",
@@ -6284,6 +6436,10 @@
 			"text":"The Gladiator"
 		},
 		{
+			"type":"The Golden Era",
+			"text":"The Golden Era"
+		},
+		{
 			"type":"The Hale Heart",
 			"text":"The Hale Heart"
 		},
@@ -6340,12 +6496,20 @@
 			"text":"The Jeweller's Boon"
 		},
 		{
+			"type":"The Journey",
+			"text":"The Journey"
+		},
+		{
 			"type":"The King's Blade",
 			"text":"The King's Blade"
 		},
 		{
 			"type":"The King's Heart",
 			"text":"The King's Heart"
+		},
+		{
+			"type":"The Landing",
+			"text":"The Landing"
 		},
 		{
 			"type":"The Last One Standing",
@@ -6356,6 +6520,10 @@
 			"text":"The Lich"
 		},
 		{
+			"type":"The Life Thief",
+			"text":"The Life Thief"
+		},
+		{
 			"type":"The Lion",
 			"text":"The Lion"
 		},
@@ -6364,12 +6532,20 @@
 			"text":"The Lord in Black"
 		},
 		{
+			"type":"The Lord of Celebration",
+			"text":"The Lord of Celebration"
+		},
+		{
 			"type":"The Lover",
 			"text":"The Lover"
 		},
 		{
 			"type":"The Lunaris Priestess",
 			"text":"The Lunaris Priestess"
+		},
+		{
+			"type":"The Mad King",
+			"text":"The Mad King"
 		},
 		{
 			"type":"The Master",
@@ -6386,6 +6562,10 @@
 		{
 			"type":"The Mercenary",
 			"text":"The Mercenary"
+		},
+		{
+			"type":"The Messenger",
+			"text":"The Messenger"
 		},
 		{
 			"type":"The Metalsmith's Gift",
@@ -6502,6 +6682,10 @@
 		{
 			"type":"The Scholar",
 			"text":"The Scholar"
+		},
+		{
+			"type":"The Seeker",
+			"text":"The Seeker"
 		},
 		{
 			"type":"The Sephirot",
@@ -7059,8 +7243,8 @@
 			"text":"Bound Fossil"
 		},
 		{
-			"type":"Fractured Fossil ",
-			"text":"Fractured Fossil "
+			"type":"Fractured Fossil",
+			"text":"Fractured Fossil"
 		},
 		{
 			"type":"Jagged Fossil",
@@ -7820,6 +8004,14 @@
 			}
 		},
 		{
+			"name":"Bottled Faith",
+			"type":"Sulphur Flask",
+			"text":"Bottled Faith Sulphur Flask",
+			"flags":{
+				"unique":true
+			}
+		},
+		{
 			"name":"Cinderswallow Urn",
 			"type":"Silver Flask",
 			"text":"Cinderswallow Urn Silver Flask",
@@ -8331,8 +8523,16 @@
 			"text":"Cyclone"
 		},
 		{
+			"type":"Malevolence",
+			"text":"Malevolence"
+		},
+		{
 			"type":"Dark Pact",
 			"text":"Dark Pact"
+		},
+		{
+			"type":"Bane",
+			"text":"Bane"
 		},
 		{
 			"type":"Decoy Totem",
@@ -8365,6 +8565,10 @@
 		{
 			"type":"Discipline",
 			"text":"Discipline"
+		},
+		{
+			"type":"Divine Ire",
+			"text":"Divine Ire"
 		},
 		{
 			"type":"Dominating Blow",
@@ -8451,8 +8655,8 @@
 			"text":"Flamethrower Trap"
 		},
 		{
-			"type":"Flame Totem",
-			"text":"Flame Totem"
+			"type":"Holy Flame Totem",
+			"text":"Holy Flame Totem"
 		},
 		{
 			"type":"Flame Surge",
@@ -8699,6 +8903,10 @@
 			"text":"Punishment"
 		},
 		{
+			"type":"Wave of Conviction",
+			"text":"Wave of Conviction"
+		},
+		{
 			"type":"Purity of Elements",
 			"text":"Purity of Elements"
 		},
@@ -8741,6 +8949,10 @@
 		{
 			"type":"Riposte",
 			"text":"Riposte"
+		},
+		{
+			"type":"Purifying Flame",
+			"text":"Purifying Flame"
 		},
 		{
 			"type":"Scourge Arrow",
@@ -8787,8 +8999,16 @@
 			"text":"Smoke Mine"
 		},
 		{
+			"type":"Soulrend",
+			"text":"Soulrend"
+		},
+		{
 			"type":"Spark",
 			"text":"Spark"
+		},
+		{
+			"type":"Zealotry",
+			"text":"Zealotry"
 		},
 		{
 			"type":"Spirit Offering",
@@ -9243,6 +9463,10 @@
 			"text":"Endurance Charge on Melee Stun Support"
 		},
 		{
+			"type":"Energy Leech Support",
+			"text":"Energy Leech Support"
+		},
+		{
 			"type":"Faster Attacks Support",
 			"text":"Faster Attacks Support"
 		},
@@ -9281,6 +9505,14 @@
 		{
 			"type":"Greater Multiple Projectiles Support",
 			"text":"Greater Multiple Projectiles Support"
+		},
+		{
+			"type":"Unleash Support",
+			"text":"Unleash Support"
+		},
+		{
+			"type":"Intensify Support",
+			"text":"Intensify Support"
 		},
 		{
 			"type":"Ignite Proliferation Support",
@@ -9483,8 +9715,8 @@
 			"text":"Ancestral Call Support"
 		},
 		{
-			"type":"Storm Barrier Support",
-			"text":"Storm Barrier Support"
+			"type":"Infused Channelling Support",
+			"text":"Infused Channelling Support"
 		},
 		{
 			"type":"Stun Support",
@@ -14738,6 +14970,14 @@
 			}
 		},
 		{
+			"name":"Nebulis",
+			"type":"Void Sceptre",
+			"text":"Nebulis Void Sceptre",
+			"flags":{
+				"unique":true
+			}
+		},
+		{
 			"name":"Nebuloch",
 			"type":"Nightmare Mace",
 			"text":"Nebuloch Nightmare Mace",
@@ -17824,6 +18064,15 @@
 			"type":"Prophecy",
 			"disc":"niko",
 			"text":"A Master Seeks Help Prophecy (Niko)",
+			"flags":{
+				"prophecy":true
+			}
+		},
+		{
+			"name":"A Master Seeks Help",
+			"type":"Prophecy",
+			"disc":"jun",
+			"text":"A Master Seeks Help Prophecy (Jun)",
 			"flags":{
 				"prophecy":true
 			}

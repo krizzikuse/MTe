@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+import poedotcom.PoEdotcomLeagueExpert;
 import poedotcom.PoEdotcomQueryHandler;
 import poedotcom.basictypes.Enums.QueryType;
 import poedotcom.itemdata.ItemExpert;
@@ -175,11 +176,12 @@ public class MercuryConfigManager implements ConfigManager, AsSubscriber {
             //List<POETradeCurrencyDataEntry> al = this.currJSONHelper.readArrayDataVar(new TypeToken<List<POETradeCurrencyDataEntry>>() { });  //WORKS kinda
             //List<POETradeCurrencyDataEntry> al = this.currJSONHelper.readArrayDataVar(new TypeToken<List<POETradeCurrencyDataEntry>>() { });  //TESTING FUCKING AROUND
             CurrencyData currencyData = this.poetradeCurrJSONHelper.readPOETradeCurrency();  //TESTING FUCKING AROUND
-            
-            currencyData.addPOEdotcomCurrency(this.poedotcomCurrJSONHelper.readPOEDotComCurrencyData());
+            PoEdotcomQueryHandler poecomqueryhandler = new PoEdotcomQueryHandler();
+            //currencyData.addPOEdotcomCurrency(this.poedotcomCurrJSONHelper.readPOEDotComCurrencyData());  //old solution fixed data from poe trades companion
+            currencyData.addPOEdotcomCurrency(poecomqueryhandler.getCurrencyMapData()); //new solution get the live-data  on each startup directly from the source of the list of poe trades companion
             //this.poedotcomCurrJSONHelper.readPOEDotComCurrencyData();
             //poedotcomCurrJSONHelper
-            
+            PoEdotcomLeagueExpert.addLeagues(poecomqueryhandler.getLeagueData());
             //this.currJSONHelper.readArrayDataVar2();  //TESTING FUCKING AROUND
             List<String> currencyNames = new LinkedList();
             //currencyNames= Arrays.asList();
@@ -198,14 +200,14 @@ public class MercuryConfigManager implements ConfigManager, AsSubscriber {
             
             //JSONtests jsontest = new JSONtests();
             //TODO: remove from here once its implemented in the right place!
-            PoEdotcomQueryHandler poecomqueryhandler = new PoEdotcomQueryHandler();
+            //PoEdotcomQueryHandler poecomqueryhandler = new PoEdotcomQueryHandler();
 //            poecomqueryhandler.getOffers("Betrayal",QueryType.currency,"aserelite","Orb of Alchemy"); 
             ItemExpert itemExpert = new ItemExpert();
             itemExpert.decipherData(poecomqueryhandler.getItemData());
             
-            PoENinjaCommunicator poeninjacommhandler = new PoENinjaCommunicator();
-            
-            ExchangeHelper.addExchangeRates(poeninjacommhandler.getCurrencyExchangeRates());
+//            PoENinjaCommunicator poeninjacommhandler = new PoENinjaCommunicator();
+//            
+//            ExchangeHelper.addExchangeRates(poeninjacommhandler.getCurrencyExchangeRates());
 //            ExchangeHelper exch = new ExchangeHelper(
 //                    poeninjacommhandler.getCurrencyExchangeRates());
             

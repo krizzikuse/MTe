@@ -14,8 +14,10 @@ import java.io.File;
 public class FileMonitor {
     private static final long POLLING_INTERVAL = 350;
     private Logger logger = LogManager.getLogger(FileMonitor.class.getSimpleName());
-    private MessageFileHandler fileHandler;
-    private FileAlterationMonitor monitor;
+    private static MessageFileHandler fileHandler;
+    private static FileAlterationMonitor monitor;
+    private static FileAlterationObserver observer;
+    private static FileAlterationListener listener;
 
     public FileMonitor() {
         MercuryStoreCore.poeFolderChangedSubject.subscribe(state -> {
@@ -35,9 +37,11 @@ public class FileMonitor {
 
         File folder = new File(gamePath + "logs");
         this.fileHandler = new MessageFileHandler(gamePath + "logs/Client.txt");
-        FileAlterationObserver observer = new FileAlterationObserver(folder);
+//        FileAlterationObserver observer = new FileAlterationObserver(folder);
+        observer = new FileAlterationObserver(folder);
         monitor = new FileAlterationMonitor(POLLING_INTERVAL);
-        FileAlterationListener listener = new FileAlterationListenerAdaptor() {
+//        FileAlterationListener listener = new FileAlterationListenerAdaptor() {
+        listener = new FileAlterationListenerAdaptor() {
             @Override
             public void onFileChange(File file) {
                 fileHandler.parse();

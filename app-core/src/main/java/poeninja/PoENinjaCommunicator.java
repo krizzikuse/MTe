@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import com.mercury.platform.shared.config.Configuration;
 import static helpful_techniques.FileHelper.getPath;
 import helpful_techniques.JSONBeautifier;
 import java.io.IOException;
@@ -52,7 +53,9 @@ public class PoENinjaCommunicator {
     HttpHost target;
     Gson gson = new Gson();
     SSLConnectionSocketFactory sslConnectionSocketFactory;    
-    public PoENinjaCommunicator() throws IOException {
+    String league;
+    public PoENinjaCommunicator(String league) throws IOException {
+        this.league = league;
         /////////////////
         // Create SSL Client
         /////////////////
@@ -81,9 +84,19 @@ public class PoENinjaCommunicator {
     
     public Map<String,Double> getCurrencyExchangeRates() throws IOException {
         //poe.ninja/api/Data/GetCurrencyOverview?league=Betrayal
-        JsonObject result = getPoENinjadata("/api/Data/GetCurrencyOverview?league=Standard",true,
-                        "Enhancements_config/json/"
-                        + "PoE.ninja.API.Data.CurrencyOverview.Standard.json"); 
+//        JsonObject result = getPoENinjadata("/api/Data/GetCurrencyOverview?league=Synthesis",true,
+//                        "Enhancements_config/json/"
+//                        + "PoE.ninja.API.Data.CurrencyOverview.Synthesis.json"); 
+        JsonObject result = null;
+        try {
+            while(Configuration.get().notificationConfiguration() == null)
+                ;
+            result = getPoENinjadata("/api/Data/GetCurrencyOverview?league=" + league,true,
+                            "Enhancements_config/json/"
+                            + "PoE.ninja.API.Data.CurrencyOverview.Synthesis.json"); 
+        } catch (Exception ex) {
+            
+        }
         
         return(decipherRates(result.toString()));
         
@@ -121,14 +134,14 @@ public class PoENinjaCommunicator {
         response.close();
         
         logger.log(Level.DEBUG,"+++++++++++++++++ now showing all data queried "
-                + "from www.pathofexile.com/api/trade/data/stats +++++++++++++++++");
+                + "from www.poe.ninja" + httpPostString +" +++++++++++++++++");
 //        System.out.println("+++++++++++++++++ now showing all data queried "
 //                + "from www.pathofexile.com/api/trade/data/stats +++++++++++++++++");
         //System.out.println(JSONBeautifier.fomat(modStats.toString()));
         String jsonString = JSONBeautifier.format(jsonObj.toString());
         logger.log(Level.DEBUG,jsonString);
         logger.log(Level.DEBUG,"+++++++++++++++++ done showing all data queried "
-                + "from www.pathofexile.com/api/trade/data/stats +++++++++++++++++");
+                + "from www.poe.ninja" + httpPostString +" +++++++++++++++++");
 //        System.out.println(jsonString);
 //        System.out.println("+++++++++++++++++ done showing all data queried "
 //                + "from www.pathofexile.com/api/trade/data/stats +++++++++++++++++");

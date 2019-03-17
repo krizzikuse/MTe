@@ -43,6 +43,8 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

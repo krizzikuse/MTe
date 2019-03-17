@@ -151,6 +151,7 @@ C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\poedotcom\qu
 C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\com\mercury\platform\shared\hotkey\HotKeysInterceptor.java
 C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\poeninja\PoENinjaCommunicator.java
 C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\com\mercury\platform\shared\config\descriptor\adr\AdrComponentOrientation.java
+C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\poedotcom\PoEdotcomLeagueExpert.java
 C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\poedotcom\queryrequest\query\filters\socket\SocketField.java
 C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\poedotcom\queryrequest\query\filters\weapon\WeaponFiltersField.java
 C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\com\mercury\platform\shared\http\RequestBuilder.java
@@ -162,6 +163,7 @@ C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\poedotcom\of
 C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\com\mercury\platform\shared\entity\message\ItemTradeNotificationDescriptor.java
 C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\com\mercury\platform\core\ProdStarter.java
 C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\com\mercury\platform\shared\config\configration\HasDefault.java
+C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\poedotcom\basictypes\PoEdotcomIDText.java
 C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\poedotcom\basictypes\Enums.java
 C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\poedotcom\queryrequest\query\filters\req\ReqField.java
 C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\com\mercury\platform\core\utils\interceptor\plain\GermanIncLocalizationMatcher.java
@@ -176,6 +178,7 @@ C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\com\mercury\
 C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\com\mercury\platform\shared\FrameVisibleState.java
 C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\poeninja\CurrencyOverviewResult.java
 C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\com\mercury\platform\shared\config\Configuration.java
+C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\poedotcom\PoEdotcomLeagueData.java
 C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\com\mercury\platform\shared\config\descriptor\SoundDescriptor.java
 C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\poedotcom\offer\item\extended\mods\ModsField.java
 C:\MercuryTradeEnhanced\MercuryTradeEnhanced\app-core\src\main\java\com\mercury\platform\shared\store\DataTransformers.java

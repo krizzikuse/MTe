@@ -14,6 +14,7 @@ poedotcom\offer\PoEdotcomOffer.class
 poedotcom\itemdata\PoEdotcomItemData.class
 com\mercury\platform\shared\config\descriptor\HotKeyType$2.class
 currencydata\ExchangeHelper.class
+poedotcom\PoEdotcomQueryHandler$5.class
 poedotcom\queryrequest\query\filters\socket\SocketField$Type.class
 poewiki\PoEWikiWizard.class
 poedotcom\queryrequest\query\stats\StatsFiltersField.class
@@ -153,12 +154,14 @@ helpful_techniques\unsortedExClasses\JSONtests.class
 com\mercury\platform\core\misc\WhisperNotifierStatus$1.class
 com\mercury\platform\shared\config\MercuryConfigManager$5.class
 com\mercury\platform\shared\FrameVisibleState.class
+poedotcom\PoEdotcomQueryHandler$6.class
 com\mercury\platform\shared\config\json\deserializer\AdrTrackerGroupDeserializer.class
 com\mercury\platform\shared\config\json\JSONHelper$1.class
 com\mercury\platform\shared\config\configration\impl\TaskBarConfigurationService.class
 poedotcom\PoEdotcomQueryHandler_roughDevVersion_working_but_not_functional$4.class
 com\mercury\platform\core\ProdStarter.class
 com\mercury\platform\shared\config\descriptor\HotKeyType$10.class
+poedotcom\PoEdotcomLeagueExpert.class
 com\mercury\platform\core\utils\interceptor\TradeIncMessagesInterceptor.class
 com\mercury\platform\core\utils\interceptor\plain\ArabicOutLocalizationMatcher.class
 com\mercury\platform\shared\hotkey\MercuryNativeKeyListener.class
@@ -183,6 +186,7 @@ helpful_techniques\unsortedExClasses\POEdotcomQueryHandler_working_preCleanUp.cl
 com\mercury\platform\core\utils\interceptor\MessageInterceptor.class
 com\mercury\platform\shared\config\descriptor\FrameDescriptor.class
 com\mercury\platform\shared\config\descriptor\HotKeyType.class
+poedotcom\basictypes\PoEdotcomIDText.class
 com\mercury\platform\core\misc\SoundType.class
 com\mercury\platform\shared\config\configration\IconBundleConfigurationService.class
 poedotcom\queryrequest\query\filters\req\ReqField$Type.class
@@ -202,6 +206,7 @@ com\mercury\platform\shared\store\DestroySubscription.class
 com\mercury\platform\shared\config\descriptor\adr\AdrColoredComponentDescriptor.class
 poedotcom\queryrequest\query\filters\trade\TradeField$1.class
 com\mercury\platform\shared\entity\message\PlainMessageDescriptor.class
+poedotcom\PoEdotcomLeagueData.class
 tradehelpers\PoeTradeDefaults.class
 com\mercury\platform\core\utils\interceptor\TradeIncMessagesInterceptor$ArabicInLocalizationMatcher.class
 poedotcom\queryrequest\query\filters\type\TypeField$Type.class
@@ -296,6 +301,7 @@ com\mercury\platform\shared\config\configration\PlainConfigurationService.class
 com\mercury\platform\shared\config\descriptor\HotKeysSettingsDescriptor.class
 com\mercury\platform\core\utils\error\ErrorHandler.class
 poedotcom\itemdata\PoEdotcomItemDataEntry.class
+com\mercury\platform\shared\config\descriptor\HotKeyType$16.class
 com\mercury\platform\shared\config\descriptor\HotKeyType$6.class
 com\mercury\platform\shared\config\configration\HasDefault.class
 com\mercury\platform\core\utils\error\ErrorService.class

@@ -9,14 +9,21 @@ import com.mercury.platform.shared.config.descriptor.NotificationSettingsDescrip
 import com.mercury.platform.shared.entity.message.FlowDirections;
 import com.mercury.platform.ui.components.fields.font.FontStyle;
 import com.mercury.platform.ui.misc.AppThemeColor;
+import currencydata.ExchangeHelper;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import poedotcom.PoEdotcomLeagueExpert;
+import poeninja.PoENinjaCommunicator;
 
 public class NotificationSettingsPagePanel extends SettingsPagePanel {
     private PlainConfigurationService<NotificationSettingsDescriptor> notificationService;
@@ -144,6 +151,55 @@ public class NotificationSettingsPagePanel extends SettingsPagePanel {
         this.notificationHotkeyGroup.registerHotkey(hotKeyPanel);
         propertiesPanel.add(hotKeyPanel);
         
+        
+        ArrayList<JRadioButton> leaguebutton = new ArrayList<JRadioButton>();
+        propertiesPanel.add(this.componentsFactory.getTextLabel("Your league for price-verification:", FontStyle.REGULAR, 16));
+        JPanel leaguepanel = this.componentsFactory.getJPanel(new FlowLayout(), AppThemeColor.ADR_BG); 
+        //leaguebutton.add(new JRadioButton())
+        ButtonGroup leagueGroup = new ButtonGroup();
+//        group.add(optionLinux);
+   
+        for(Map.Entry<String,String> league : PoEdotcomLeagueExpert.getLeagues().entrySet()) {
+            JRadioButton lb;
+            if (league.getValue().equals(this.generalSnapshot.getLeague())) {
+                lb = new JRadioButton(league.getKey(),true);
+                try {
+                    PoENinjaCommunicator poeninjacommhandler = new PoENinjaCommunicator(league.getValue());
+
+                    ExchangeHelper.addExchangeRates(poeninjacommhandler.getCurrencyExchangeRates());     
+                } catch (Exception ex) {
+
+                }                
+                
+            } else
+                lb = new JRadioButton(league.getKey(),false);
+            lb.addItemListener(new ItemListener() {
+
+                @Override
+                public void itemStateChanged(ItemEvent event) {
+                    int state = event.getStateChange();
+                    if (state == ItemEvent.SELECTED) {
+                        generalSnapshot.setLeague(league.getValue());
+                        try {
+                            PoENinjaCommunicator poeninjacommhandler = new PoENinjaCommunicator(league.getValue());
+
+                            ExchangeHelper.addExchangeRates(poeninjacommhandler.getCurrencyExchangeRates());     
+                        } catch (Exception ex) {
+
+                        }                        
+                        
+                    } else if (state == ItemEvent.DESELECTED) {
+                        
+                    }
+                }
+            });
+            leaguebutton.add(lb);
+            leagueGroup.add(lb);
+            lb.setBackground(AppThemeColor.TRANSPARENT);
+            lb.setForeground(AppThemeColor.TEXT_DEFAULT);
+            leaguepanel.add(lb);
+        }
+        propertiesPanel.add(leaguepanel);
         
 //        if (this.selectedProfile.getHotkeysSettingsDescriptor()
 //                .getOutNHotKeysList().stream()

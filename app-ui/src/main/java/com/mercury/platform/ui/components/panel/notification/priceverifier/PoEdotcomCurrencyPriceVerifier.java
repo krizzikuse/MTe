@@ -106,155 +106,165 @@ public class PoEdotcomCurrencyPriceVerifier implements Runnable {
                         ((CurrencyTradeNotificationDescriptor)notificationDescriptor).getCurrForSaleCount());          
                 PoEdotcomQueryHandler poecomqueryhandler = new PoEdotcomQueryHandler();                
                 
-                
-                PoEdotcomOffers offers = null;
+                if ((want.getType().equals("")) || want.getType() == null) {
+                    logger.log(Level.ERROR, "*!*!*!*!*!*!*!*!* Error in PriceVerification! *!*!*!*!*!*!*!*!*!*!*!*!*");
+                    logger.log(Level.ERROR, "item the buyer wants wasnt found in exchange-list!");            
+        //            System.out.println("*!*!*!*!*!*!*!*!* Exception occured in PriceVerification! *!*!*!*!*!*!*!*!*!*!*!*!*");
+        //            System.out.println(ex);
+                    tradeNotification.setPriceVerificationException();                    
+                } else {
 
-                OfferVsListingData ret = null;
-                retF = ret;
+                    PoEdotcomOffers offers = null;
 
-                offers = poecomqueryhandler.getBulkOffer(StatusValues.online, league, accountName,
-                        CurrencyData.getPoEdotcomBulkExchangeName(
-                                ((TradeNotificationDescriptor)notificationDescriptor).getCurrency()), want);
-                if (offers.getResult().size()<1)
-                    offers = poecomqueryhandler.getBulkOffer(StatusValues.any, league, accountName,
-                        CurrencyData.getPoEdotcomBulkExchangeName(
-                                ((TradeNotificationDescriptor)notificationDescriptor).getCurrency()), want);
-
-                if (offers.getResult().size()<1) {
-                    offers = poecomqueryhandler.getBulkOffer(StatusValues.any, league, accountName,
-                        "", want);   
-                    if (offers.getResult().size()>0)
-                        differentcurrency = true;
-                }
-                
-                //AnthrópiniSkoúraTrypa: Hi, I'd like to buy your 10 Chaos Orb for my 1 Exalted Orb in Betrayal.
-    //            if (offers.getResult().size()!=0) {
-    //             
-    //            }
-                for (PoEdotcomOffer result : offers.getResult()) {
-                    //double listedPrice = result.getListing().getPrice().getAmount();
-                    //double listedPrice = result.getListing().getPrice().getExchange().getAmount();
-                    //String listedPriceCurrency = result.getListing().getPrice().getExchange().getCurrency();
-                    CurrencyAmount listedPrice = new CurrencyAmount(    //the listed Price
-                            result.getListing().getPrice().getExchange().getCurrency(),
-                            result.getListing().getPrice().getExchange().getAmount()
-                    );
-
-                    String listedCurrency =  result.getListing().getPrice().getItem().getCurrency();    //what's offered for the listed price
-                    double listedCurrencyAmount = result.getListing().getPrice().getItem().getAmount(); //^the associated amount
-
-                    double offerToListingAmount = want.getAmount()/listedCurrencyAmount;
-
-                    CurrencyAmount listedPricetimesWantAmount = new CurrencyAmount(
-                            listedPrice.getType(),
-                            listedPrice.getAmount()*offerToListingAmount
-                    );
-
-                    double offerVsPrice = ExchangeHelper.compareCurrAmount(
-                            new CurrencyAmount(
-                                ((TradeNotificationDescriptor) 
-                                    notificationDescriptor).getCurrency(),
-                                ((TradeNotificationDescriptor) 
-                                    notificationDescriptor).getCurCount()),                                        
-                                listedPricetimesWantAmount
-                    );
-
-                    ret = new OfferVsListingData();
-                    ret.setListedCurrencyType(CurrencyData.getMTeCurrencyIconName(listedPricetimesWantAmount.getType()));
-                    ret.setListedCurrencyAmount(listedPricetimesWantAmount.getAmount());
-
-                    ret.setOfferedCurrencyType(((TradeNotificationDescriptor) notificationDescriptor).getCurrency());
-                    ret.setOfferedCurrencyAmount(((TradeNotificationDescriptor) notificationDescriptor).getCurCount());                
-                    ret.setRelation(offerVsPrice);
+                    OfferVsListingData ret = null;
                     retF = ret;
-                
-                //String listedCurrencyType = result.getListing().getPrice().getType();    
 
-                
-//                if (result.getListing().getAccount().getName().equals(accountName)) {
-//                    System.out.println("accountName found!");
-//                    if (result.getListing().getStash().getName().equals(stash)) {
-//                        System.out.println("stash found!");
-//                        if (result.getListing().getStash().getX() == (stashX-1)) {
-//                            System.out.println("stashX found!");
-//                            if (result.getListing().getStash().getY() == (stashY-1)) {
-//                                System.out.println("stashY found!");
-//                                //double offeredPrice = Double.parseDouble(((ItemTradeNotificationDescriptor) notificationDescriptor).getOffer());
-//                                //double offeredPrice = ((ItemTradeNotificationDescriptor) notificationDescriptor).getCurCount();
-//                                //TODO - what if it's not priced?
-//                                if (result.getListing().getPrice() == null) {
-//                                    notpriced = true;
-//                                    break;
-//                                }
-//                                double listedPrice = result.getListing().getPrice().getAmount();
-//                                String listedCurrency = result.getListing().getPrice().getCurrency();
-//                                String listedCurrencyType = result.getListing().getPrice().getType();   // == Type of offer ~b/o or other...
-//                                double offerVsPrice = ExchangeHelper.compareCurrAmount(
-//                                        new CurrencyAmount(
-//                                            ((ItemTradeNotificationDescriptor) 
-//                                                    notificationDescriptor).getCurrency(),
-//                                            ((ItemTradeNotificationDescriptor) 
-//                                                    notificationDescriptor).getCurCount()),                                        
-//                                        new CurrencyAmount(listedCurrency, listedPrice)
-//                                );
-//                                //double offerVsPrice = offeredPrice/listedPrice;
-//                                
-//                                ret = new OfferVsListingData();
-//                                listedCurrency = CurrencyData.getMTeCurrencyIconName(listedCurrency);
-//                                ret.setListedCurrencyType(listedCurrency);
-//                                ret.setListedCurrencyAmount(listedPrice);
-//                                
-//                                ret.setOfferedCurrencyType(((ItemTradeNotificationDescriptor) notificationDescriptor).getCurrency());
-//                                ret.setOfferedCurrencyAmount(((ItemTradeNotificationDescriptor) notificationDescriptor).getCurCount());
-////                                if (!listedCurrency.equals(
-////                                        ((ItemTradeNotificationDescriptor) notificationDescriptor).getCurrency())) {
-////                                    String properListedCurrency = CurrencyData.getProperCurrencyName(result.getListing().getPrice().getCurrency());
-////                                    String properOfferCurrency = CurrencyData.getProperCurrencyName(((ItemTradeNotificationDescriptor) notificationDescriptor).getCurrency());
-////                                    ;   //TODO - compare currency
-////                                }
-//                                
-//                                
-//                                ret.setRelation(offerVsPrice);
-//                                retF = ret;
-//                                break;
-////                                tradeNotification.setPriceVerificationResult(ret);
-//                            }
-//                        }
-//                    }
-//                }
-            }
-//            tradeNotification.setPriceVerificationResult(ret);    //previous place of this call - before it went to the last line!
-            
-//            SwingUtilities.invokeLater(new Runnable() {
-//                public void run() {
-//                    tradeNotification.setPriceVerificationResult(retF);
-//                }
-//            });      
-                if ((retF==null) && (!notpriced)) {
-                    logger.log(Level.DEBUG, "item wasnt found!");
-//                    System.out.println("item wasnt found!");
-                    retF = new OfferVsListingData();
-                    retF.setListedCurrencyAmount(-1);
-                    retF.setListedCurrencyType("");
-                    retF.setOfferedCurrencyAmount(-1);
-                    retF.setOfferedCurrencyType("");
-                    retF.setRelation(-1);
-                } else if (notpriced) {
-                    logger.log(Level.DEBUG, "item found, but no price set!");
-//                    System.out.println("item found, but no price set!");
-                    retF = new OfferVsListingData();
-                    retF.setListedCurrencyAmount(-2);
-                    retF.setListedCurrencyType("");
-                    retF.setOfferedCurrencyAmount(-2);
-                    retF.setOfferedCurrencyType("");
-                    retF.setRelation(-2);            
+                    offers = poecomqueryhandler.getBulkOffer(StatusValues.online, league, accountName,
+                            CurrencyData.getPoEdotcomBulkExchangeName(
+                                    ((TradeNotificationDescriptor)notificationDescriptor).getCurrency()), want);
+                    if (offers.getResult().size()<1)
+                        offers = poecomqueryhandler.getBulkOffer(StatusValues.any, league, accountName,
+                            CurrencyData.getPoEdotcomBulkExchangeName(
+                                    ((TradeNotificationDescriptor)notificationDescriptor).getCurrency()), want);
+
+                    if (offers.getResult().size()<1) {
+                        offers = poecomqueryhandler.getBulkOffer(StatusValues.any, league, accountName,
+                            "", want);   
+                        if (offers.getResult().size()>0)
+                            differentcurrency = true;
+                    }
+
+                    //AnthrópiniSkoúraTrypa: Hi, I'd like to buy your 10 Chaos Orb for my 1 Exalted Orb in Betrayal.
+        //            if (offers.getResult().size()!=0) {
+        //             
+        //            }
+                    for (PoEdotcomOffer result : offers.getResult()) {
+                        //double listedPrice = result.getListing().getPrice().getAmount();
+                        //double listedPrice = result.getListing().getPrice().getExchange().getAmount();
+                        //String listedPriceCurrency = result.getListing().getPrice().getExchange().getCurrency();
+                        if ((!(want.getType().equals(result.getListing().getPrice().getItem().getCurrency()))) ||
+                            (!(want.getAmount()>=result.getListing().getPrice().getItem().getAmount())))
+                            continue;
+                        CurrencyAmount listedPrice = new CurrencyAmount(    //the listed Price
+                                result.getListing().getPrice().getExchange().getCurrency(),
+                                result.getListing().getPrice().getExchange().getAmount()
+                        );
+
+                        String listedCurrency =  result.getListing().getPrice().getItem().getCurrency();    //what's offered for the listed price
+                        double listedCurrencyAmount = result.getListing().getPrice().getItem().getAmount(); //^the associated amount
+
+                        double offerToListingAmount = want.getAmount()/listedCurrencyAmount;
+
+                        CurrencyAmount listedPricetimesWantAmount = new CurrencyAmount(
+                                listedPrice.getType(),
+                                listedPrice.getAmount()*offerToListingAmount
+                        );
+
+                        double offerVsPrice = ExchangeHelper.compareCurrAmount(
+                                new CurrencyAmount(
+                                    ((TradeNotificationDescriptor) 
+                                        notificationDescriptor).getCurrency(),
+                                    ((TradeNotificationDescriptor) 
+                                        notificationDescriptor).getCurCount()),                                        
+                                    listedPricetimesWantAmount
+                        );
+
+                        ret = new OfferVsListingData();
+                        ret.setListedCurrencyType(CurrencyData.getMTeCurrencyIconName(listedPricetimesWantAmount.getType()));
+                        ret.setListedCurrencyAmount(listedPricetimesWantAmount.getAmount());
+
+                        ret.setOfferedCurrencyType(((TradeNotificationDescriptor) notificationDescriptor).getCurrency());
+                        ret.setOfferedCurrencyAmount(((TradeNotificationDescriptor) notificationDescriptor).getCurCount());                
+                        ret.setRelation(offerVsPrice);
+                        retF = ret;
+
+                    //String listedCurrencyType = result.getListing().getPrice().getType();    
+
+
+    //                if (result.getListing().getAccount().getName().equals(accountName)) {
+    //                    System.out.println("accountName found!");
+    //                    if (result.getListing().getStash().getName().equals(stash)) {
+    //                        System.out.println("stash found!");
+    //                        if (result.getListing().getStash().getX() == (stashX-1)) {
+    //                            System.out.println("stashX found!");
+    //                            if (result.getListing().getStash().getY() == (stashY-1)) {
+    //                                System.out.println("stashY found!");
+    //                                //double offeredPrice = Double.parseDouble(((ItemTradeNotificationDescriptor) notificationDescriptor).getOffer());
+    //                                //double offeredPrice = ((ItemTradeNotificationDescriptor) notificationDescriptor).getCurCount();
+    //                                //TODO - what if it's not priced?
+    //                                if (result.getListing().getPrice() == null) {
+    //                                    notpriced = true;
+    //                                    break;
+    //                                }
+    //                                double listedPrice = result.getListing().getPrice().getAmount();
+    //                                String listedCurrency = result.getListing().getPrice().getCurrency();
+    //                                String listedCurrencyType = result.getListing().getPrice().getType();   // == Type of offer ~b/o or other...
+    //                                double offerVsPrice = ExchangeHelper.compareCurrAmount(
+    //                                        new CurrencyAmount(
+    //                                            ((ItemTradeNotificationDescriptor) 
+    //                                                    notificationDescriptor).getCurrency(),
+    //                                            ((ItemTradeNotificationDescriptor) 
+    //                                                    notificationDescriptor).getCurCount()),                                        
+    //                                        new CurrencyAmount(listedCurrency, listedPrice)
+    //                                );
+    //                                //double offerVsPrice = offeredPrice/listedPrice;
+    //                                
+    //                                ret = new OfferVsListingData();
+    //                                listedCurrency = CurrencyData.getMTeCurrencyIconName(listedCurrency);
+    //                                ret.setListedCurrencyType(listedCurrency);
+    //                                ret.setListedCurrencyAmount(listedPrice);
+    //                                
+    //                                ret.setOfferedCurrencyType(((ItemTradeNotificationDescriptor) notificationDescriptor).getCurrency());
+    //                                ret.setOfferedCurrencyAmount(((ItemTradeNotificationDescriptor) notificationDescriptor).getCurCount());
+    ////                                if (!listedCurrency.equals(
+    ////                                        ((ItemTradeNotificationDescriptor) notificationDescriptor).getCurrency())) {
+    ////                                    String properListedCurrency = CurrencyData.getProperCurrencyName(result.getListing().getPrice().getCurrency());
+    ////                                    String properOfferCurrency = CurrencyData.getProperCurrencyName(((ItemTradeNotificationDescriptor) notificationDescriptor).getCurrency());
+    ////                                    ;   //TODO - compare currency
+    ////                                }
+    //                                
+    //                                
+    //                                ret.setRelation(offerVsPrice);
+    //                                retF = ret;
+    //                                break;
+    ////                                tradeNotification.setPriceVerificationResult(ret);
+    //                            }
+    //                        }
+    //                    }
+    //                }
                 }
+    //            tradeNotification.setPriceVerificationResult(ret);    //previous place of this call - before it went to the last line!
 
-                if (differentcurrency)
-                    retF.setDiffCurrency(true);
-                tradeNotification.setPriceVerificationResult(retF);
+    //            SwingUtilities.invokeLater(new Runnable() {
+    //                public void run() {
+    //                    tradeNotification.setPriceVerificationResult(retF);
+    //                }
+    //            });      
+                    if ((retF==null) && (!notpriced)) {
+                        logger.log(Level.DEBUG, "item wasnt found!");
+    //                    System.out.println("item wasnt found!");
+                        retF = new OfferVsListingData();
+                        retF.setListedCurrencyAmount(-1);
+                        retF.setListedCurrencyType("");
+                        retF.setOfferedCurrencyAmount(-1);
+                        retF.setOfferedCurrencyType("");
+                        retF.setRelation(-1);
+                    } else if (notpriced) {
+                        logger.log(Level.DEBUG, "item found, but no price set!");
+    //                    System.out.println("item found, but no price set!");
+                        retF = new OfferVsListingData();
+                        retF.setListedCurrencyAmount(-2);
+                        retF.setListedCurrencyType("");
+                        retF.setOfferedCurrencyAmount(-2);
+                        retF.setOfferedCurrencyType("");
+                        retF.setRelation(-2);            
+                    }
+
+                    if (differentcurrency)
+                        retF.setDiffCurrency(true);
+                    tradeNotification.setPriceVerificationResult(retF);
+                }
             }
-        
         } catch (Exception ex) {
             logger.log(Level.ERROR, "*!*!*!*!*!*!*!*!* Exception occured in PriceVerification! *!*!*!*!*!*!*!*!*!*!*!*!*");
             logger.log(Level.ERROR, ex);            
