@@ -32,7 +32,7 @@ Although you'll probably don't need the *_debug shortcut - as this one is for de
 Upon launch you'll be greeted with a short overview of the application (identical to this ReadMe) and patch notes. Afterwards you should see **Task Panel** and **Notification Panel**.
 
 
-**Dont forget the original Mercury Trade Release by Exslims!**
+**Dont forget to support the original Mercury Trade Release by Exslims:**
 
 [![Donate](https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_150x38.png)](https://www.paypal.me/mercurytrade) 
 
