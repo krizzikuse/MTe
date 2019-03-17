@@ -81,13 +81,15 @@ public class MessageFileHandler implements AsSubscriber {
             }
         }).collect(Collectors.toList());
         Collections.reverse(resultMessages);
-        this.interceptors.forEach(interceptor -> {
-            resultMessages.forEach(message -> {
-                if (interceptor.match(message)) {
-                    this.lastMessageDate = new Date(StringUtils.substring(message, 0, 20));
-                }
+        try {
+            this.interceptors.forEach(interceptor -> {
+                resultMessages.forEach(message -> {
+                    if (interceptor.match(message)) {
+                        this.lastMessageDate = new Date(StringUtils.substring(message, 0, 20));
+                    }
+                });
             });
-        });
+        } catch (Exception ex) {}
     }
 
     @Override
