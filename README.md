@@ -1,6 +1,8 @@
 # MTe - Mercury Trade enhanced
 an enhanced version of Mercury Trade now featuring Price-Verification, as seen in other Path of Exile Trading Tools!
 
+
+**Release 2 is now life**
 Uses Live-Data (Live at the selection of the League in Notification Settings) from poe.ninja for currency conversion
   league can now be configured in Notification settings!
   
