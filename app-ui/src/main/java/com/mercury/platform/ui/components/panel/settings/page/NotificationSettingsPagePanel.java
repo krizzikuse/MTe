@@ -164,7 +164,11 @@ public class NotificationSettingsPagePanel extends SettingsPagePanel {
             if (league.getValue().equals(this.generalSnapshot.getLeague())) {
                 lb = new JRadioButton(league.getKey(),true);
                 try {
-                    PoENinjaCommunicator poeninjacommhandler = new PoENinjaCommunicator(league.getValue());
+                    PoENinjaCommunicator poeninjacommhandler;
+                    if (!league.getValue().trim().matches("Hardcore\\s.*"))
+                        poeninjacommhandler = new PoENinjaCommunicator(league.getValue());
+                    else
+                        poeninjacommhandler = new PoENinjaCommunicator("tmphardcore");
 
                     ExchangeHelper.addExchangeRates(poeninjacommhandler.getCurrencyExchangeRates());     
                 } catch (Exception ex) {
@@ -181,7 +185,11 @@ public class NotificationSettingsPagePanel extends SettingsPagePanel {
                     if (state == ItemEvent.SELECTED) {
                         generalSnapshot.setLeague(league.getValue());
                         try {
-                            PoENinjaCommunicator poeninjacommhandler = new PoENinjaCommunicator(league.getValue());
+                            PoENinjaCommunicator poeninjacommhandler;
+                            if (!league.getValue().trim().matches("Hardcore\\s.*"))
+                                poeninjacommhandler = new PoENinjaCommunicator(league.getValue());
+                            else
+                                poeninjacommhandler = new PoENinjaCommunicator("tmphardcore");
 
                             ExchangeHelper.addExchangeRates(poeninjacommhandler.getCurrencyExchangeRates());     
                         } catch (Exception ex) {
