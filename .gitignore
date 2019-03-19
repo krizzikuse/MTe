@@ -55,3 +55,5 @@ local.properties
 **/release.properties
 **/dependency-reduced-pom.xml
 **/buildNumber.properties
+
+!app-core/src/main/resources/app/local-updater.jar
